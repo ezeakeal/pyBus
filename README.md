@@ -7,13 +7,13 @@ This is to be used with the USB interface which can be acquired from [Reslers.de
 The software expects MPD to be working on whatever it is installed on (for me, hopefully a raspberry Pi - will write something in a blog soon)
 
 ## Overview
-There are 2 main components:
-**pyBus.py** - interfaces with the iBus to emulate a CD-Changer
-**pyBus_web.py** - Web-Server which will broadcast an interface that allows a user to:
-	* Play/Pause
-	* Next/Previous
-	* Modify Playlist
-	* View RPM, current speed
+There are 2 main components:  
+**pyBus.py** - interfaces with the iBus to emulate a CD-Changer  
+**pyBus_web.py** - Web-Server which will broadcast an interface that allows a user to:  
+* Play/Pause
+* Next/Previous
+* Modify Playlist
+* View RPM, current speed
 
 
 ### Warning
