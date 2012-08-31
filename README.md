@@ -25,5 +25,5 @@ Soooon..
 ## How to use
 * Plug in iBus USB device
 * Run: `./pyBus.py <PATH to USB Device>`
-** E.g. `./pyBus.py /dev/ttyUSB0`
+	* E.g. `./pyBus.py /dev/ttyUSB0`
 
