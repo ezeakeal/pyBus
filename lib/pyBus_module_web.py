@@ -18,15 +18,15 @@ urls = (
 )
 
 render = web.template.render('templates/')
-IBUS_LOG_FILE = "/tmp/ibus_custom.log"
+PYBUS_SOCKET_FILE = "/tmp/ibus_custom.log"
 
 #########################
 # Internal Functions
 ######################### 
 def getCustomData():
   status = None
-  if (os.path.isfile(IBUS_LOG_FILE)):  
-    log_file = open(IBUS_LOG_FILE,"r")
+  if (os.path.isfile(PYBUS_SOCKET_FILE)):  
+    log_file = open(PYBUS_SOCKET_FILE,"r")
     log_file_data = log_file.read()
     log_file.close() 
     try:

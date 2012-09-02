@@ -3,6 +3,12 @@
 import os, sys, time, signal, json
 import pyBus_core as core
 
+# This module will read a packet, match it against the json object 'DIRECTIVES' below. 
+# The packet is checked by matching the source value in packet (i.e. where the packet came from) to a key in the object if possible
+# Then matching the Destination if possible
+# The joining the 'data' component of the packet and matching that if possible.
+# The resulting value will be the name of a function to pass the packet to for processing of sorts.
+
 #####################################
 # GLOBALS
 #####################################
@@ -39,12 +45,12 @@ WRITER = None
 #####################################
 # FUNCTIONS
 #####################################
-# INIT
+# Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
   global WRITER
   WRITER = writer
 
-# MANAGE PACKET!
+# Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
 def manage(packet):
   src = packet['src']
   dst = packet['dst']
@@ -68,15 +74,15 @@ def manage(packet):
   except Exception, e:
     core.printOut(e, 2)
     
-  if methodName:
+  if methodName != None:
     methodToCall = globals()[methodName]
-    core.printOut("Directive found for packet:", 0)
+    core.printOut("Directive found for following packet:", 0)
     core.displayPacket(packet, 0)
     result = methodToCall(packet)
     return result
 
   else:
-    core.printOut("Directive not found for packet:", 1)
+    core.printOut("Directive not found for following packet:", 1)
     core.displayPacket(packet, 1)
     return None
 
@@ -84,25 +90,28 @@ def manage(packet):
   
 #####################################
 # All directives should have a d_ prefix as we are searching GLOABBLY for function names.. so best have unique enough names
+
+# This method is used to keep registering the device if the radio hasn't responded yet with a poll
 def globalManage(packet):
   if not REGISTERED:
     WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
+# This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
 def d_custom_IKE(packet):
   packet_data = packet['dat']
   if packet_data[0] == '18':
     speed = int(packet_data[1], 16) * 2
     revs = int(packet_data[2], 16)
     customState = {'speed' : speed, 'revs' : revs}
-    core.writeCustomData(customState)
-    speedTrigger(speed)
+    core.writeCustomData(customState) # This data is written to a file for the web-interface to display
+    speedTrigger(speed) # This is a silly little thing for changing track based on speed ;)
 
-
+# NEXT command is invoked from the Radio. 
 def d_cdNext(packet):
   core.pB_audio.next()
-  trackID = '%02X' % int(core.pB_audio.getTrackID())
+  trackID = '%02X' % int(core.pB_audio.getTrackID()) # Track ID used to be sent to the radio, but track number can exceed 99 causing problems (data is converted to INT at the radio for displaying)
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
-  core.pB_display.setMode('cd_track', 'cd_progress')
+  core.pB_display.setMode('cd_track', 'cd_progress') # Sets the 'mode' in the display module, which will determine what text is written.
 
 def d_cdPrev(packet):
   core.pB_audio.previous()
@@ -148,7 +157,7 @@ def d_cdRandom(packet):
     core.pB_display.instantText('Random ON')
    
 def speedTrigger(speed):
-  if (speed > 100):
+  if (speed > 120):
     fastSong = "Dethklok/Dethklok - The Gears.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):

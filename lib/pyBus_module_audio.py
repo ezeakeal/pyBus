@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+# The MPD module has practically no documentation as far as I know.. so a lot of this is guess-work, albeit educated guess-work
 import pprint, os, sys, time, signal
 from mpd import (MPDClient, CommandError)
 from socket import error as SocketError
@@ -34,7 +35,7 @@ def init():
   if mpdConnect(CLIENT, CON_ID):
     print 'Got connected!'
     print 'Updating!'
-    CLIENT.update()
+    CLIENT.update() # update music in mpd
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY = CLIENT.listallinfo()
     CLIENT.repeat(1) # Repeat all tracks

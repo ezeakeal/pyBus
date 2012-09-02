@@ -6,6 +6,10 @@ import pyBus_core as core
 import datetime
 
 #####################################
+# WARNING: Behaviour of this module is going to be rebuilt entirely, it is moving towards spaghetti code.
+#####################################
+
+#####################################
 # GLOBALS
 #####################################
 

@@ -8,8 +8,8 @@ import pyBus_core as core
 #####################################
 # Manage Ctrl+C gracefully
 def signal_handler_quit(signal, frame):
-  print 'Closing Serial Connection'
-  core.closeBus()
+  print 'Shutting Down pyBus'
+  core.shutdown()
   sys.exit(0)
 
 # Print basic usage
@@ -37,7 +37,8 @@ while True:
     core.run()
   except Exception:
     core.printOut("I just hit some weird exception:", 2)
-    traceback.print_exc(core.LOGFILE_ERROR)
+    traceback.print_exc(file=core.LOG_ERROR)
+    traceback.print_exc()
     core.printOut("Going to sleep 5 seconds and restart", 2)
     time.sleep(5)
 sys.exit(0)
