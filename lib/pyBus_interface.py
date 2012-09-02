@@ -56,7 +56,7 @@ class ibusFace ( ):
       dataLen = dataLen - 1
     packet['dat'] = dataTmp
     packet['xor'] = self.readChar()
-    if DEBUG: 
+    if self.DEBUG: 
       print "Read Packet:"
       print packet
     return packet
@@ -100,7 +100,7 @@ class ibusFace ( ):
     while not packetSent:
       if (self.SDEV.getCTS()):
         packetSent = True
-        if DEBUG: 
+        if self.DEBUG: 
           print "Writing Packet:"
           print packet
         for p in packet:

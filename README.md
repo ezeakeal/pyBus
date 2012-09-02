@@ -15,6 +15,9 @@ There are 2 main components:
 * Modify Playlist
 * View RPM, current speed
 
+### Useful links
+http://linux.die.net/man/5/mpd.conf
+http://miro.oorganica.com/raspberry-pi-mpd/
 
 ### Warning
 All software is in early alpha stages!
