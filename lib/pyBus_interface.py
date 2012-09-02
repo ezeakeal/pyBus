@@ -1,4 +1,4 @@
-import serial
+import serial, time
 #------------------------------------
 # CLASS for iBus communications
 #------------------------------------
