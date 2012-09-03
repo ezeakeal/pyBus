@@ -107,7 +107,8 @@ def d_custom_IKE(packet):
     speedTrigger(speed) # This is a silly little thing for changing track based on speed ;)
 
 def _displayTrackInfo(text=True):
-  infoQue, textQue = []
+  infoQue = []
+  textQue = []
   if text:
     textQue = _getTrackTextQue()
   infoQue = _getTrackInfoQue()
