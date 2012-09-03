@@ -17,7 +17,7 @@ DISPLAY_QUE = []
 TICK = 1 # sleep interval in seconds used after displaying a string from DISPLAY_QUE
 WRITER = None # Writer thread
 DISPLAY_TEXT = True # whether or not to allow the module to write to display (Note, immediateText() does not care about this)
-MAX_STRINGLEN = 12 # max characters we can fit on display
+MAX_STRINGLEN = 11 # max characters we can fit on display
 
 #####################################
 # FUNCTIONS

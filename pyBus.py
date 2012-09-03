@@ -25,7 +25,7 @@ def configureLogging(numeric_level):
   logging.basicConfig(
     filename=logfile, 
     level=numeric_level,
-    format='%(asctime)s [%(levelname)s in %(module)s] <Thread %(thread)d> %(message)s', 
+    format='%(asctime)s [%(levelname)s in %(module)s] %(message)s', 
     datefmt='%Y/%m/%dT%I:%M:%S'
   )
   
