@@ -110,10 +110,14 @@ def _displayTrackInfo():
   displayQue = []
   status = core.pB_audio.getInfo()
   if ('track' in status):
-    if ('artist' in status['track']):
+    trackStatus = status['track']
+    if ('artist' in trackStatus):
       displayQue.append(status['track']['artist'])
-    if ('title' in status['track']):
+    if ('title' in trackStatus):
       displayQue.append(status['track']['title'])
+    if ('song' in trackStatus and 'playlistlength' in trackStatus):
+      displayQue.append("%s of %s" % (trackStatus['song'], trackStatus['playlistlength']))
+
   core.pB_display.setQue(displayQue)
 
 # NEXT command is invoked from the Radio. 
