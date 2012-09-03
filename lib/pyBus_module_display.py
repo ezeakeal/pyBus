@@ -17,7 +17,7 @@ DISPLAY_QUE = []
 TICK = 1 # sleep interval in seconds used after displaying a string from DISPLAY_QUE
 WRITER = None # Writer thread
 DISPLAY_TEXT = True # whether or not to allow the module to write to display (Note, immediateText() does not care about this)
-MAX_STRINGLEN = 10 # max characters we can fit on display
+MAX_STRINGLEN = 12 # max characters we can fit on display
 
 #####################################
 # FUNCTIONS
@@ -43,10 +43,11 @@ def addStringToQue(string):
 # Increment display offset to scroll screen. Once scrolled, set to next display mode
 def _scrollDisplay():
   global DISPLAY_QUE
-  string = DISPLAY_QUE[0]
-  if (len(string) > MAX_STRINGLEN):
-    string = string[1:30] # if you have more than 30 characters you can go suck a lemon, scrolling text is already hogging a lot of the bus
-  insertStringToQue(string, 1) # insert it after this string as this element will be deleted in the updateQue method
+  if (len(DISPLAY_QUE) > 0):
+    string = DISPLAY_QUE[0]
+    if (len(string) > MAX_STRINGLEN):
+      string = string[1:30] # if you have more than 30 characters you can go suck a lemon, scrolling text is already hogging a lot of the bus
+    insertStringToQue(string, 1) # insert it after this string as this element will be deleted in the updateQue method
 
 def insertStringToQue(string, pos=0):
   global DISPLAY_QUE

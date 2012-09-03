@@ -108,7 +108,7 @@ def d_custom_IKE(packet):
 
 def _displayTrackInfo():
   displayQue = []
-  status = getInfo()
+  status = core.pB_audio.getInfo()
   displayQue.append(status['track']['artist'])
   displayQue.append(status['track']['title'])
   core.pB_display.setQue(displayQue)
