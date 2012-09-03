@@ -42,12 +42,16 @@ def addStringToQue(string):
   
 # Increment display offset to scroll screen. Once scrolled, set to next display mode
 def _scrollDisplay():
-  global DISPLAY_QUE
+  global DISPLAY_QUE, TICK
   if (len(DISPLAY_QUE) > 0):
     string = DISPLAY_QUE[0]
     if (len(string) > MAX_STRINGLEN):
+      TICK = 0.5 # speed up scroll
       string = string[1:30] # if you have more than 30 characters you can go suck a lemon, scrolling text is already hogging a lot of the bus
-    insertStringToQue(string, 1) # insert it after this string as this element will be deleted in the updateQue method
+      insertStringToQue(string, 1) # insert it after this string as this element will be deleted in the updateQue method
+    else:
+      TICK = 1 # slow down scroll
+      return False
 
 def insertStringToQue(string, pos=0):
   global DISPLAY_QUE
