@@ -107,6 +107,23 @@ def d_custom_IKE(packet):
     speedTrigger(speed) # This is a silly little thing for changing track based on speed ;)
 
 def _displayTrackInfo():
+  textQue = _getTrackTextQue()
+  infoQue = _getTrackInfoQue()
+  core.pB_display.setQue(textQue + infoQue)
+
+def _getTrackInfoQue():
+  displayQue = []
+  status = core.pB_audio.getInfo()
+  if ('status' in status):
+    mpdStatus = status['status']
+    if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
+      displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
+      cdSong = int(mpdStatus['song']) % 100
+      cdSongHundreds = int(int(mpdStatus['song']) / 100)
+      WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', cdSongHundreds, cdSong])
+  return displayQue    
+
+def _getTrackTextQue():
   displayQue = []
   status = core.pB_audio.getInfo()
   if ('track' in status):
@@ -115,22 +132,16 @@ def _displayTrackInfo():
       displayQue.append(status['track']['artist'])
     if ('title' in trackStatus):
       displayQue.append(status['track']['title'])
-  if ('status' in status):
-    mpdStatus = status['status']
-    if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
-      displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
-  core.pB_display.setQue(displayQue)
+  return displayQue
 
 # NEXT command is invoked from the Radio. 
 def d_cdNext(packet):
   core.pB_audio.next()
-  trackID = '%02X' % int(core.pB_audio.getTrackID()) # Track ID used to be sent to the radio, but track number can exceed 99 causing problems (data is converted to INT at the radio for displaying)
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
   _displayTrackInfo()
 
 def d_cdPrev(packet):
   core.pB_audio.previous()
-  trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
   _displayTrackInfo()
 
@@ -149,13 +160,12 @@ def d_cdStopPlaying(packet):
 
 def d_cdStartPlaying(packet):
   core.pB_audio.play()
-  trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
   core.pB_display.setDisplay(True)
   
 def d_cdSendStatus(packet):
-  trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
+  _displayTrackInfo
 
 def d_cdPollResponse(packet):
   core.REGISTERED = True

@@ -79,6 +79,7 @@ class ibusFace ( ):
 
   # Write Packet to iBus, first length is determined, the packet is then constructed and a checksum generated/appended.
   # The packet is then sent if the CTS signal is good (Clear To Send)
+  # TODO: Read to verify the packet we send is seen
   def writeBusPacket(self, src, dst, data):
     length = '%02X' % (2 + len(data))
     packet = [src, length, dst]
