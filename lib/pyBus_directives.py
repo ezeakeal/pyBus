@@ -131,7 +131,6 @@ def _getTrackNumber():
   if ('status' in status):
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
-      displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
       cdSong = int(mpdStatus['song']) % 100
       cdSongHundreds = int(int(mpdStatus['song']) / 100)
   return cdSongHundreds, cdSong    
