@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, json, traceback
+import os, sys, time, signal, json, traceback, logging
 import threading
 import pyBus_core as core
 import datetime
@@ -13,107 +13,95 @@ import datetime
 # GLOBALS
 #####################################
 
-DISPLAY_STR = "" # Initial display string
-DISPLAY_OFFSET = 0 # Offset for moving string
-DISPLAY_WIDTH = 12 # Length of display unit in characters
-MODE = "" # Mode, used to determine how to set the display_str
-MODE_NEXT = "" 
-TICK = 0.5 # sleep time in seconds for iBus write loop
+DISPLAY_QUE = []
+TICK = 1 # sleep interval in seconds used after displaying a string from DISPLAY_QUE
+WRITER = None # Writer thread
+DISPLAY_TEXT = True # whether or not to allow the module to write to display (Note, immediateText() does not care about this)
+MAX_STRINGLEN = 10 # max characters we can fit on display
 
-WRITER = None
 #####################################
 # FUNCTIONS
 #####################################
-# Convert text to hex and prepends the required data
-def hexText(string):
+# Convert text to hex and prepends the required data for displaying text on the Radio
+def _hexText(string):
   dataPacket = ['23', '42', '01']
-  string = string[DISPLAY_OFFSET:DISPLAY_OFFSET+DISPLAY_WIDTH]
-  for c in string:
+  stringLen = 0
+  while (stringLen < MAX_STRINGLEN) and (len(string) > 0):
+    c = string[stringLen] # stringLen doubles up as the index to use when retrieving characters of the string to be displayed.. apologies for how misleading this may be
     dataPacket.append('%02X' % (ord(c)))
+    stringLen = stringLen + 1
+    if (stringLen == len(string)):
+      break
   return dataPacket
 
 # Sets the string that should be displayed/scrolled
 # If the string being set differs from the current string, set the display offset to 0
-def setString(string):
-  global DISPLAY_STR, DISPLAY_OFFSET
-  if (string != DISPLAY_STR):
-    DISPLAY_OFFSET = 0
-  DISPLAY_STR = string
+def addStringToQue(string):
+  global DISPLAY_QUE
+  DISPLAY_QUE.append(string)
   
 # Increment display offset to scroll screen. Once scrolled, set to next display mode
-def scrollDisplay():
-  global DISPLAY_OFFSET
-  DISPLAY_OFFSET = DISPLAY_OFFSET + 1
-  if (len(DISPLAY_STR) - DISPLAY_OFFSET <= DISPLAY_WIDTH-2): # - 2 to make it last a bit
-    setMode(MODE_NEXT)
+def _scrollDisplay():
+  global DISPLAY_QUE
+  string = DISPLAY_QUE[0]
+  if (len(string) > MAX_STRINGLEN):
+    string = string[1:30] # if you have more than 30 characters you can go suck a lemon, scrolling text is already hogging a lot of the bus
+  insertStringToQue(string, 1) # insert it after this string as this element will be deleted in the updateQue method
 
-# Globally sets the display mode
-def setMode(mode, next=""):
-  global MODE, MODE_NEXT
-  MODE = mode
-  MODE_NEXT = next
-  DISPLAY_OFFSET = 0
+def insertStringToQue(string, pos=0):
+  global DISPLAY_QUE
+  DISPLAY_QUE.insert(pos, string)
 
-# Gets and sets the text for the display unit
-def getText():
-  global MODE_NEXT, TICK
-  trackStr = ""
-  try:
-    if (MODE == "cd_track"):
-      TICK=0.5
-      status = core.pB_audio.getInfo()
-      trackStr = "%s - %s" % (status['track']['artist'], status['track']['title'])
-    elif (MODE == "cd_title"):
-      trackStr = "%s" % (status['track']['title'])
-      MODE_NEXT = "cd_title"
-    elif (MODE == "cd_progress"):
-      TICK = 1
-      MODE_NEXT = 'cd_progress'
-      status = core.pB_audio.getInfo()
-      timeStatus = status['status']['time'].split(':')
-      time_0 = str(datetime.timedelta(seconds=int(timeStatus[0])))[2:10]
-      time_1 = str(datetime.timedelta(seconds=int(timeStatus[1])))[2:10]
-      trackStr = "%s/%s" % (time_0, time_1)
-    else:
-      trackStr = MODE
-  except e:
-    trackStr = "ERROR"
-    core.printOut(e, 2)
-  setString(trackStr)
+def immediateText(string):
+  insertStringToQue(string)
+  WRITER.write()
+  updateQue()
 
-def instantText(string):
-  global MODE, MODE_NEXT
-  MODE_NEXT = MODE
-  setMode(string) # Sets mode to the string. By default, this will set text to the mode
+def updateQue():
+  global DISPLAY_QUE
+  if (len(DISPLAY_QUE) > 0):
+    del DISPLAY_QUE[0]
+
+def setQue(que):
+  global DISPLAY_QUE
+  DISPLAY_QUE = que
+  
+def setDisplay(safe):
+  global DISPLAY_TEXT
+  DISPLAY_TEXT = safe
 
 #------------------------------------
 # THREAD FOR TICKING AND WRITING
 #------------------------------------
 class busWriter ( threading.Thread ):
-  def __init__ ( self, writer ):
-    self.writer = writer
+  def __init__ ( self, ibus ):
+    self.IBUS = ibus
     threading.Thread.__init__ ( self )
 
   def write(self):
-    if (DISPLAY_STR != ""):
-      self.writer.writeBusPacket('C8', '80', hexText(DISPLAY_STR)) 
-
+    if (len(DISPLAY_QUE) > 0):
+      string = DISPLAY_QUE[0]
+      self.IBUS.writeBusPacket('C8', '80', _hexText(string)) 
+  
   def run(self):
-    core.printOut('Display writing thread initialized', 0)
+    logging.info('Display thread initialized')
     while True:
-      getText() # get text
-      busWriter.write(self) # write
-      scrollDisplay() # scroll if required
+      if DISPLAY_TEXT:
+        busWriter.write(self) # write
+        scrollDisplay() # scroll text if required
+        updateQue() # removes the element that we just printed
       time.sleep(TICK) # sleep a bit
 
   def stop(self):
+    self.IBUS = None
     self._Thread__stop()
 #------------------------------------
 
-def init(writer):
+def init(IBUS):
   global WRITER
-  WRITER = busWriter(writer)
+  WRITER = busWriter(IBUS)
   WRITER.start()
 
 def end():
-  WRITER.stop()
+  if WRITER:
+    WRITER.stop()

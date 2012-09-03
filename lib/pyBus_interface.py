@@ -1,10 +1,10 @@
-import serial, time
+import serial, time, logging
 #------------------------------------
 # CLASS for iBus communications
 #------------------------------------
 class ibusFace ( ):
   # Initialize the serial connection - then use some commands I saw somewhere once
-  def __init__(self, devPath, debug=False):
+  def __init__(self, devPath,):
     self.SDEV = serial.Serial(
       devPath,
       baudrate=9600,
@@ -12,7 +12,6 @@ class ibusFace ( ):
       parity=serial.PARITY_EVEN,
       stopbits=serial.STOPBITS_ONE
     )
-    self.DEBUG = debug
     self.SDEV.setDTR(True)
     self.SDEV.flushInput()
 
@@ -56,9 +55,6 @@ class ibusFace ( ):
       dataLen = dataLen - 1
     packet['dat'] = dataTmp
     packet['xor'] = self.readChar()
-    if self.DEBUG: 
-      print "Read Packet:"
-      print packet
     return packet
 
   # Read in one character from the bus and convert to hex
@@ -100,14 +96,13 @@ class ibusFace ( ):
     while not packetSent:
       if (self.SDEV.getCTS()):
         packetSent = True
-        if self.DEBUG: 
-          print "Writing Packet:"
-          print packet
+        logging.debug("Writing Packet:")
+        logging.debug(packet)
         for p in packet:
           self.writeChar(p)
       else:
         time.sleep(0.02)
-        print "Waiting for bus to clear before writing!"
+        logging.info("Waiting for bus to clear before writing!")
 
   def close(self):
     self.SDEV.close()

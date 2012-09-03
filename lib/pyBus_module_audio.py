@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # The MPD module has practically no documentation as far as I know.. so a lot of this is guess-work, albeit educated guess-work
-import pprint, os, sys, time, signal
+import pprint, os, sys, time, signal, logging
 from mpd import (MPDClient, CommandError)
 from socket import error as SocketError
 import pyBus_core as core
@@ -33,14 +33,18 @@ def init():
   ## MPD object instance
   CLIENT = MPDClient()
   if mpdConnect(CLIENT, CON_ID):
-    print 'Got connected!'
-    print 'Updating!'
-    CLIENT.update() # update music in mpd
+    logging.info('Connected to MPD server')
+    update() # update music in mpd
     PLAYLIST = CLIENT.playlistinfo()
-    LIBRARY = CLIENT.listallinfo()
-    CLIENT.repeat(1) # Repeat all tracks
+    LIBRARY  = CLIENT.listallinfo()
+    repeat(True) # Repeat all tracks
   else:
-    print 'fail to connect MPD server.'
+    logging.critical('Failed to connect to MPD server')
+
+# Updates MPD library
+def update():
+  logging.info('Updating MPD Library')
+  CLIENT.update()
 
 def quit():
   CLIENT.disconnect()
@@ -49,7 +53,8 @@ def play():
   CLIENT.play()
 
 def stop():
-  CLIENT.stop()
+  if CLIENT:
+    CLIENT.stop()
 
 def pause():
   CLIENT.pause()
@@ -60,8 +65,19 @@ def next():
 def previous():
   CLIENT.previous()
 
-def random(random):
+def repeat(repeat, toggle=False):
+  if toggle:
+    current = int(CLIENT.status()['repeat'])
+    repeat = int(not current) # Love this
+  CLIENT.repeat(repeat)
+  return bool(repeat)
+
+def random(random, toggle=False):
+  if toggle:
+    current = int(CLIENT.status()['random'])
+    random = int(not current) # Love this
   CLIENT.random(random)
+  return bool(random)
 
 def seek(delta):
   seekDest = int(float(CLIENT.status()['elapsed']) + delta)
@@ -122,12 +138,13 @@ def getLibrary():
 
 def  getTrackID():
   if ("songid" not in CLIENT.status()):
-    print "ERROR:"
-    print CLIENT.status()
+    logging.warning("MPD status does not contain songID. Please investigate following status:")
+    logging.warning(CLIENT.status())
   try:
     currentTID = CLIENT.status()['songid']
     return currentTID
-  except:
-    print "Some sort of error occured.."
+  except e:
+    logging.warning("Unexpected Exception occured:")
+    logging.warning(traceback.format_exc())
     return 0
   

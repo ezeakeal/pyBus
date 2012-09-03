@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, json
+import os, sys, time, signal, json, logging
 import pyBus_core as core
 
 # This module will read a packet, match it against the json object 'DIRECTIVES' below. 
@@ -76,14 +76,14 @@ def manage(packet):
     
   if methodName != None:
     methodToCall = globals()[methodName]
-    core.printOut("Directive found for following packet:", 0)
-    core.displayPacket(packet, 0)
+    logging.debug("Directive found for following packet:")
+    core.displayPacket(packet)
     result = methodToCall(packet)
     return result
 
   else:
-    core.printOut("Directive not found for following packet:", 1)
-    core.displayPacket(packet, 1)
+    logging.debug("Directive not found for following packet:")
+    core.displayPacket(packet)
     return None
 
   globalManage(packet)
@@ -103,22 +103,29 @@ def d_custom_IKE(packet):
     speed = int(packet_data[1], 16) * 2
     revs = int(packet_data[2], 16)
     customState = {'speed' : speed, 'revs' : revs}
-    core.writeCustomData(customState) # This data is written to a file for the web-interface to display
+    core.writeDataToSocket(customState) # This data is written to a file for the web-interface to display
     speedTrigger(speed) # This is a silly little thing for changing track based on speed ;)
+
+def _displayTrackInfo():
+  displayQue = []
+  status = getInfo()
+  displayQue.append(status['track']['artist'])
+  displayQue.append(status['track']['title'])
+  core.pB_display.setQue(displayQue)
 
 # NEXT command is invoked from the Radio. 
 def d_cdNext(packet):
   core.pB_audio.next()
   trackID = '%02X' % int(core.pB_audio.getTrackID()) # Track ID used to be sent to the radio, but track number can exceed 99 causing problems (data is converted to INT at the radio for displaying)
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
-  core.pB_display.setMode('cd_track', 'cd_progress') # Sets the 'mode' in the display module, which will determine what text is written.
+  _displayTrackInfo()
 
 def d_cdPrev(packet):
   core.pB_audio.previous()
   trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
-  core.pB_display.setMode('cd_track', 'cd_progress')
-  
+  _displayTrackInfo()
+
 def d_cdScanForward(packet):
   WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', '01', '01'])
   core.pB_audio.seek(2)
@@ -130,15 +137,14 @@ def d_cdScanBackard(packet):
 def d_cdStopPlaying(packet):
   core.pB_audio.pause()
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', '01', '00'])
-  core.pB_display.setMode('') # Clears out the mode to prevent strings being sent
-  core.pB_display.instantText('') # Sets the current string empty for next write
+  core.setDisplay(False)
 
 def d_cdStartPlaying(packet):
   core.pB_audio.play()
   trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
-  core.pB_display.setMode('cd_track', 'cd_progress')
- 
+  core.setDisplay(True)
+  
 def d_cdSendStatus(packet):
   trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
@@ -149,12 +155,11 @@ def d_cdPollResponse(packet):
   
 def d_cdRandom(packet):
   packet_data = packet['dat']
-  if packet_data[2] == '00':
-    core.pB_audio.random(0)
-    core.pB_display.instantText('Random OFF')
-  if packet_data[2] == '01':
-    core.pB_audio.random(1)
-    core.pB_display.instantText('Random ON')
+  random = core.pB_audio.random(0, True)
+  if random:
+    core.pB_display.immediateText('Random: ON')
+  else:
+    core.pB_display.immediateText('Random: OFF')
    
 def speedTrigger(speed):
   if (speed > 120):
@@ -163,6 +168,6 @@ def speedTrigger(speed):
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
         core.pB_audio.addSong(fastSong)
         core.pB_audio.playSong(fastSong)
-        core.pB_display.setMode('HOLY SHIT', 'cd_progress')
+        core.pB_display.immediateText('HOLY SHIT')
     except:
-      print "Exception changing track"
+      logging.warning("Exception changing track")
