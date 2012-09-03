@@ -26,6 +26,7 @@ MAX_STRINGLEN = 12 # max characters we can fit on display
 def _hexText(string):
   dataPacket = ['23', '42', '01']
   stringLen = 0
+  logging.debug("Got string for hexing: %s", string)
   while (stringLen < MAX_STRINGLEN) and (len(string) > 0):
     c = string[stringLen] # stringLen doubles up as the index to use when retrieving characters of the string to be displayed.. apologies for how misleading this may be
     dataPacket.append('%02X' % (ord(c)))
