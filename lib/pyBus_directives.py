@@ -72,7 +72,7 @@ def manage(packet):
       methodName = dstDir[dataString]
     
   except Exception, e:
-    core.printOut(e, 2)
+    logging.warning(e)
     
   if methodName != None:
     methodToCall = globals()[methodName]
