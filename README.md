@@ -17,8 +17,8 @@ There are 2 main components:
 
 ### Useful links
 http://linux.die.net/man/5/mpd.conf   
-http://miro.oorganica.com/raspberry-pi-mpd/
-http://web.comhem.se/bengt-olof.swing/ibusdevicesandoperations.htm
+http://miro.oorganica.com/raspberry-pi-mpd/   
+http://web.comhem.se/bengt-olof.swing/ibusdevicesandoperations.htm   
 
 ### Warning
 All software is in early alpha stages!
