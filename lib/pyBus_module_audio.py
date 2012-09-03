@@ -68,16 +68,16 @@ def previous():
 def repeat(repeat, toggle=False):
   if toggle:
     current = int(CLIENT.status()['repeat'])
-    repeat = int(not current) # Love this
-  CLIENT.repeat(repeat)
-  return bool(repeat)
+    repeat = (not current) # Love this
+  CLIENT.repeat(int(repeat))
+  return repeat
 
 def random(random, toggle=False):
   if toggle:
     current = int(CLIENT.status()['random'])
-    random = int(not current) # Love this
-  CLIENT.random(random)
-  return bool(random)
+    random = (not current) # Love this
+  CLIENT.random(int(random))
+  return random
 
 def seek(delta):
   seekDest = int(float(CLIENT.status()['elapsed']) + delta)
