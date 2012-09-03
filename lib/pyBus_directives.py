@@ -119,7 +119,6 @@ def _displayTrackInfo():
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
       displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
-  return displayQue
   core.pB_display.setQue(displayQue)
 
 # NEXT command is invoked from the Radio. 
