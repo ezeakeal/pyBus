@@ -88,7 +88,7 @@ class busWriter ( threading.Thread ):
     while True:
       if DISPLAY_TEXT:
         busWriter.write(self) # write
-        scrollDisplay() # scroll text if required
+        _scrollDisplay() # scroll text if required
         updateQue() # removes the element that we just printed
       time.sleep(TICK) # sleep a bit
 

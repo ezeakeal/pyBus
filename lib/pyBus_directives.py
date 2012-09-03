@@ -137,13 +137,13 @@ def d_cdScanBackard(packet):
 def d_cdStopPlaying(packet):
   core.pB_audio.pause()
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', '01', '00'])
-  core.setDisplay(False)
+  core.pB_display.setDisplay(False)
 
 def d_cdStartPlaying(packet):
   core.pB_audio.play()
   trackID = '%02X' % int(core.pB_audio.getTrackID())
   WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
-  core.setDisplay(True)
+  core.pB_display.setDisplay(True)
   
 def d_cdSendStatus(packet):
   trackID = '%02X' % int(core.pB_audio.getTrackID())
