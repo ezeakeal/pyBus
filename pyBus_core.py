@@ -121,7 +121,7 @@ def initialize(devPath):
   LOG_STDRD = open(LOGFILE_STDRD, 'a')
   WRITER = ibusFace(devPath)
   pB_audio.init()
-  pB_display.init(WRITER)
+  # pB_display.init(WRITER)
   directives.init(WRITER)
   # Wait for the iBus to clear, then send some initialization signals
   WRITER.waitClearBus()
