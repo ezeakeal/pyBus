@@ -109,8 +109,11 @@ def d_custom_IKE(packet):
 def _displayTrackInfo():
   displayQue = []
   status = core.pB_audio.getInfo()
-  displayQue.append(status['track']['artist'])
-  displayQue.append(status['track']['title'])
+  if ('track' in status):
+    if ('artist' in status['track']):
+      displayQue.append(status['track']['artist'])
+    if ('title' in status['track']):
+      displayQue.append(status['track']['title'])
   core.pB_display.setQue(displayQue)
 
 # NEXT command is invoked from the Radio. 

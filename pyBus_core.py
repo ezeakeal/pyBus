@@ -96,6 +96,7 @@ def initialize(devPath):
   directives.init(IBUS)
   IBUS.waitClearBus() # Wait for the iBus to clear, then send some initialization signals
   initSignals()
+  pB_display.immediateText('PyBus Alive')
 
 # close the USB device and whatever else is required
 def shutdown():
