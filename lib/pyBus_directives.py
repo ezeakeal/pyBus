@@ -118,10 +118,21 @@ def _getTrackInfoQue():
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
       displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
+  return displayQue    
+
+def writeCurrentTrack():
+  cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', cdSongHundreds, cdSong])
+
+def _getTrackNumber():
+  status = core.pB_audio.getInfo()
+  if ('status' in status):
+    mpdStatus = status['status']
+    if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
+      displayQue.append("%s of %s" % (mpdStatus['song'], mpdStatus['playlistlength']))
       cdSong = int(mpdStatus['song']) % 100
       cdSongHundreds = int(int(mpdStatus['song']) / 100)
-      WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  return displayQue    
+  return cdSongHundreds, cdSong    
 
 def _getTrackTextQue():
   displayQue = []
@@ -137,34 +148,37 @@ def _getTrackTextQue():
 # NEXT command is invoked from the Radio. 
 def d_cdNext(packet):
   core.pB_audio.next()
-  WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
+  writeCurrentTrack()
   _displayTrackInfo()
 
 def d_cdPrev(packet):
   core.pB_audio.previous()
-  WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', '01', '01'])
+  writeCurrentTrack()
   _displayTrackInfo()
 
 def d_cdScanForward(packet):
-  WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', '01', '01'])
+  cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong])
   core.pB_audio.seek(2)
 
 def d_cdScanBackard(packet):
-  WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', '01', '01'])
+  cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong])
   core.pB_audio.seek(-2)
 
 def d_cdStopPlaying(packet):
   core.pB_audio.pause()
+  cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', '01', '00'])
   core.pB_display.setDisplay(False)
 
 def d_cdStartPlaying(packet):
   core.pB_audio.play()
-  WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
+  writeCurrentTrack()
   core.pB_display.setDisplay(True)
   
 def d_cdSendStatus(packet):
-  WRITER.writeBusPacket('18', '68', ['39', '00', '09', '00', '3F', '00', '01', '01'])
+  writeCurrentTrack()
   _displayTrackInfo
 
 def d_cdPollResponse(packet):
