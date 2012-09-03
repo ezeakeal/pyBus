@@ -106,8 +106,10 @@ def d_custom_IKE(packet):
     core.writeDataToSocket(customState) # This data is written to a file for the web-interface to display
     speedTrigger(speed) # This is a silly little thing for changing track based on speed ;)
 
-def _displayTrackInfo():
-  textQue = _getTrackTextQue()
+def _displayTrackInfo(text=True):
+  infoQue, textQue = []
+  if text:
+    textQue = _getTrackTextQue()
   infoQue = _getTrackInfoQue()
   core.pB_display.setQue(textQue + infoQue)
 
@@ -192,6 +194,7 @@ def d_cdRandom(packet):
     core.pB_display.immediateText('Random: ON')
   else:
     core.pB_display.immediateText('Random: OFF')
+  _displayTrackInfo(False)
    
 def speedTrigger(speed):
   if (speed > 120):
