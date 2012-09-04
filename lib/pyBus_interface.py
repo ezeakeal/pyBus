@@ -69,6 +69,11 @@ class ibusFace ( ):
     self.SDEV.write(wChar)
     self.SDEV.flush()
 
+  def writeFullPacket(self, packet):
+    data = ''.join(chr(p) for p in packet)
+    self.SDEV.write(data)
+    self.SDEV.flush()
+
   # get the checksum of a complete packet to be appended to the packet - I think everything listening on ibus checks these packets (except for this tool)
   def getCheckSum(self, packet):
     chk = 0
@@ -99,8 +104,9 @@ class ibusFace ( ):
         packetSent = True
         logging.debug("Writing Packet:")
         logging.debug(packet)
-        for p in packet:
-          self.writeChar(p)
+        self.writeFullPacket(packet)
+        # for p in packet:
+        #   self.writeChar(p)
       else:
         time.sleep(0.02)
         logging.info("Waiting for bus to clear before writing!")

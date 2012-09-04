@@ -21,7 +21,7 @@ def print_usage():
 def configureLogging(numeric_level):
   logfile = core.LOGFILE
   if not isinstance(numeric_level, int):
-    numeric_level=2
+    numeric_level=0
   logging.basicConfig(
     filename=logfile, 
     level=numeric_level,
@@ -53,5 +53,7 @@ while True:
     logging.error("I just hit some weird exception:")
     logging.error(traceback.format_exc())
     logging.info("Going to sleep 5 seconds and restart")
+    core.shutdown()
     time.sleep(5)
+
 sys.exit(0)

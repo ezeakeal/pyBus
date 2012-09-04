@@ -93,7 +93,7 @@ def manage(packet):
 
 # This method is used to keep registering the device if the radio hasn't responded yet with a poll
 def globalManage(packet):
-  if not REGISTERED:
+  if not core.REGISTERED:
     WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES

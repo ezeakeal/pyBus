@@ -41,6 +41,7 @@ LOCATIONS = {
 LOGFILE = "/var/log/pybus.log"
 PYBUS_SOCKET_FILE = '/tmp/ibus_custom.log'
 IBUS = None
+REGISTERED = False # This is a temporary measure until state driven behaviour is implemented
 
 #####################################
 # FUNCTIONS
@@ -82,7 +83,8 @@ def initSignals():
 
 # Initializes modules as required and opens files for writing
 def initialize(devPath):
-  global IBUS
+  global IBUS, REGISTERED
+  REGISTERED=False
   # Initialize the iBus interface
   while IBUS == None:
     if os.path.exists(devPath):
@@ -90,7 +92,6 @@ def initialize(devPath):
     else:
       logging.warning("USB interface not found at (%s). Waiting 2 seconds.", devPath)
       time.sleep(2)
-  
   pB_audio.init()
   pB_display.init(IBUS)
   directives.init(IBUS)
