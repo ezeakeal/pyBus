@@ -38,7 +38,7 @@ LOCATIONS = {
   'FF' : 'Broadcast'
 }
 
-LOGFILE = "/var/log/pybus.log"
+LOGFILE = "/music/pybus.log"
 PYBUS_SOCKET_FILE = '/tmp/ibus_custom.log'
 IBUS = None
 REGISTERED = False # This is a temporary measure until state driven behaviour is implemented

@@ -37,9 +37,14 @@ DIRECTIVES = {
       '380800' : 'd_cdRandom',
       '380801' : 'd_cdRandom'
     }
+  },
+  '50' : {
+    'C8' : {
+      '3B40' : 'd_test'
+    }
   }
 }
-
+DOOR_LOCKED = False
 WRITER = None
 
 #####################################
@@ -95,6 +100,11 @@ def manage(packet):
 def globalManage(packet):
   if not core.REGISTERED:
     WRITER.writeBusPacket('18', 'FF', ['02', '01'])
+
+# test pfiunction for code, hit RT button
+def d_test(packet):
+  WRITER.writeBusPacket('3F', 'BF', ['0C','00','00','00','00','21','10','00','06'])
+  WRITER.writeBusPacket('3F', 'BF', ['0C','00','00','00','00','00','00','00','06'])
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
 def d_custom_IKE(packet):
@@ -170,14 +180,15 @@ def d_cdScanBackard(packet):
 
 def d_cdStopPlaying(packet):
   core.pB_audio.pause()
-  cdSongHundreds, cdSong = _getTrackNumber()
-  WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', '01', '00'])
   core.pB_display.setDisplay(False)
-
+  cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', cdSongHundreds, cdSong])
+  
 def d_cdStartPlaying(packet):
   core.pB_audio.play()
-  writeCurrentTrack()
   core.pB_display.setDisplay(True)
+  writeCurrentTrack()
+  _displayTrackInfo()
   
 def d_cdSendStatus(packet):
   writeCurrentTrack()
@@ -197,6 +208,7 @@ def d_cdRandom(packet):
   _displayTrackInfo(False)
    
 def speedTrigger(speed):
+  global DOOR_LOCKED
   if (speed > 120):
     fastSong = "Dethklok/Dethklok - The Gears.mp3"
     try:
@@ -206,3 +218,9 @@ def speedTrigger(speed):
         core.pB_display.immediateText('HOLY SHIT')
     except:
       logging.warning("Exception changing track")
+  if (speed > 30):
+    if not DOOR_LOCKED:
+      WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+  if (speed < 30):
+    if DOOR_LOCKED:
+      WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
