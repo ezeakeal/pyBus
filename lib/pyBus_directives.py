@@ -150,7 +150,7 @@ def _getTrackInfoQue():
   if ('status' in status):
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
-      displayQue.append("%s of %s" % (int(mpdStatus['song']+1), mpdStatus['playlistlength']))
+      displayQue.append("%s of %s" % (int(mpdStatus['song'])+1, mpdStatus['playlistlength']))
   return displayQue    
 
 def writeCurrentTrack():
