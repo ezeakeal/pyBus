@@ -2,6 +2,7 @@
 
 import os, sys, time, signal, json, logging
 import pyBus_core as core
+import traceback
 
 # This module will read a packet, match it against the json object 'DIRECTIVES' below. 
 # The packet is checked by matching the source value in packet (i.e. where the packet came from) to a key in the object if possible
@@ -115,8 +116,9 @@ def d_cdChange3(packet):
       pkt = json.loads(pktFile.read())
       pktFile.close()
       WRITER.writeBusPacket(pkt['src'], pkt['dst'], pkt['data'])
-    except e:
+    except:
       logging.debug('Error on custom command: %s' % e)
+      logging.error(traceback.format_exc())
 
 def d_cdChange4(packet):
   logging.info("Running Custom 4")
