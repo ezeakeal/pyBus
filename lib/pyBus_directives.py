@@ -32,8 +32,10 @@ DIRECTIVES = {
       '380A01' : 'd_cdPrev',
       '380700' : 'd_cdScanForward',
       '380701' : 'd_cdScanBackard',
-      '380400' : 'd_cdScanForward',
-      '380401' : 'd_cdScanBackard',
+      '380601' : 'd_cdChange1',
+      '380602' : 'd_cdChange2',
+      '380401' : 'd_cdScanForward',
+      '380400' : 'd_cdScanBackard',
       '380800' : 'd_cdRandom',
       '380801' : 'd_cdRandom'
     }
@@ -101,9 +103,11 @@ def globalManage(packet):
   if not core.REGISTERED:
     WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
-# test pfiunction for code, hit RT button
-def d_test(packet):
-  print "test"
+def d_cdChange1(packet):
+  print "test1"
+
+def d_cdChange2(packet):
+  print "test2"
   WRITER.writeBusPacket('00', 'BF', ['76', '04'])
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
@@ -226,15 +230,15 @@ def speedTrigger(speed):
 
     except:
       logging.warning("Exception changing track")
-  if (speed > 20):
+  if (speed > 5):
     if not DOOR_LOCKED:
       DOOR_LOCKED = True
-      WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+      WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
       logging.debug("Set DOOR_LOCKED True")
-  if (speed < 20):
+  if (speed < 5):
     if DOOR_LOCKED:
       DOOR_LOCKED = False
-      WRITER.writeBusPacket('3F', '00', ['0C', '97', '00'])
+      WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
       logging.debug("Set DOOR_LOCKED False")
 
 
