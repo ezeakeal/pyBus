@@ -109,7 +109,7 @@ def d_cdChange3(packet):
   logging.info("Running Custom 3")
   core.pB_display.immediateText('Custom')
   customPacket = '/tmp/customCommand'
-  if os.exists(customPacket):
+  if os.path.exists(customPacket):
     try:
       pktFile = open(customPacket)
       pkt = json.loads(pktFile.read())
