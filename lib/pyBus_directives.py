@@ -39,8 +39,8 @@ DIRECTIVES = {
     }
   },
   '50' : {
-    'C8' : {
-      '3B40' : 'd_test'
+    '68' : {
+      '01' : 'd_test'
     }
   }
 }
@@ -103,8 +103,8 @@ def globalManage(packet):
 
 # test pfiunction for code, hit RT button
 def d_test(packet):
-  WRITER.writeBusPacket('3F', 'BF', ['0C','00','00','00','00','21','10','00','06'])
-  WRITER.writeBusPacket('3F', 'BF', ['0C','00','00','00','00','00','00','00','06'])
+  print "test"
+  WRITER.writeBusPacket('00', 'BF', ['76', '04'])
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
 def d_custom_IKE(packet):
@@ -209,18 +209,29 @@ def d_cdRandom(packet):
    
 def speedTrigger(speed):
   global DOOR_LOCKED
-  if (speed > 120):
+  if (speed > 100):
     fastSong = "Dethklok/Dethklok - The Gears.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
         core.pB_audio.addSong(fastSong)
         core.pB_audio.playSong(fastSong)
         core.pB_display.immediateText('HOLY SHIT')
+        WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
+        WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
+        WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
+        WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
+
     except:
       logging.warning("Exception changing track")
-  if (speed > 30):
+  if (speed > 20):
     if not DOOR_LOCKED:
+      DOOR_LOCKED = True
       WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
-  if (speed < 30):
+  if (speed < 20):
     if DOOR_LOCKED:
+      DOOR_LOCKED = False
       WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+
+
+
+
