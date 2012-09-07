@@ -63,14 +63,14 @@ def pause():
   CLIENT.pause()
 
 def next():
-  stop()
+  CLIENT.setvol(0)
   CLIENT.next()
-  play()
+  CLIENT.setvol(100)
 
 def previous():
-  stop()
+  CLIENT.setvol(0)
   CLIENT.previous()
-  play()
+  CLIENT.setvol(100)
 
 def repeat(repeat, toggle=False):
   if toggle:
