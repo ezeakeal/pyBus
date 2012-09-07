@@ -36,8 +36,6 @@ def init():
   if mpdConnect(CLIENT, CON_ID):
     logging.info('Connected to MPD server')
     CLIENT.setvol(100)
-    CLIENT.clear() # Clear current playlist
-    CLIENT.add('/') # Add all songs in library (TEMP)
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY  = CLIENT.listallinfo()
     
@@ -49,7 +47,13 @@ def init():
 def update():
   logging.info('Updating MPD Library')
   CLIENT.update()
+  LIBRARY  = CLIENT.listallinfo()
 
+def addAll():
+  CLIENT.clear() # Clear current playlist
+  CLIENT.add('/') # Add all songs in library (TEMP)
+  PLAYLIST = CLIENT.playlistinfo()
+    
 def quit():
   CLIENT.disconnect()
 

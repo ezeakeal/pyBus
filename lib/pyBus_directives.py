@@ -116,6 +116,9 @@ def d_cdChange3(packet):
 
 def d_cdChange4(packet):
   logging.info("Running Custom 4")
+  core.pB_display.immediateText('UPDATE')
+  core.pB_audio.update()
+  core.pB_audio.addAll()
 
 def d_cdChange5(packet):
   logging.info("Running Custom 5")
