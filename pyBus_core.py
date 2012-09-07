@@ -74,7 +74,8 @@ def displayPacket(packet):
 def readBusLoop():
   while True:
     packet = IBUS.readBusPacket()
-    directives.manage(packet)
+    if packet:
+      directives.manage(packet)
 
 # A small function to send signals during initialization if required, currently this registers pyBus as a CD-Changer on the iBus. 
 # This will be replaced by a separate thread which will monitor the state of signals and change behaviour accordingly 

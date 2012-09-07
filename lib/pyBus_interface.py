@@ -49,6 +49,11 @@ class ibusFace ( ):
     packet["dst"] = self.readChar()
 
     dataLen = int(packet['len'], 16) - 2
+    if dataLen > 20:
+      logging.critical("Length of +20 found, no useful packet is this long.. cleaning up")
+      waitClearBus()
+      return None
+
     dataTmp = []
     while dataLen > 0:
       dataTmp.append(self.readChar())
