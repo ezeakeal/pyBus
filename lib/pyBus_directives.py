@@ -161,7 +161,7 @@ def _getTrackNumber():
   if ('status' in status):
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
-      cdSong = int(mpdStatus['song']+1) % 100
+      cdSong = (int(mpdStatus['song'])+1) % 100
       cdSongHundreds = int(int(mpdStatus['song']) / 100)
   return cdSongHundreds, cdSong    
 
