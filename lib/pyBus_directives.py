@@ -65,50 +65,60 @@ def manage(packet):
   methodName = None
 
   try:
-    if (src not in DIRECTIVES.keys()):
-      return False
-    srcDir = DIRECTIVES[src]
-    if (dst not in srcDir.keys()):
-      return False
-    dstDir = srcDir[dst]
-    if (dataString not in dstDir.keys()) and ('ALL' not in dstDir.keys()):
-      return False
+    dstDir = DIRECTIVES[src][dst]
     if ('ALL'  in dstDir.keys()):
       methodName = dstDir['ALL']
     else:
       methodName = dstDir[dataString]
-    
   except Exception, e:
     logging.warning(e)
     
+  result = None
   if methodName != None:
     methodToCall = globals()[methodName]
     logging.debug("Directive found for following packet:")
     core.displayPacket(packet)
     result = methodToCall(packet)
-    return result
-
   else:
     logging.debug("Directive not found for following packet:")
     core.displayPacket(packet)
-    return None
 
-  globalManage(packet)
+  return result
   
 #####################################
-# All directives should have a d_ prefix as we are searching GLOABBLY for function names.. so best have unique enough names
-
-# This method is used to keep registering the device if the radio hasn't responded yet with a poll
-def globalManage(packet):
-  if not core.REGISTERED:
-    WRITER.writeBusPacket('18', 'FF', ['02', '01'])
+# All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
 
 def d_cdChange1(packet):
-  print "test1"
+  logging.info("Running Custom 1")
+  core.pB_display.immediateText('Lights: OFF')
+  WRITER.writeBusPacket('00','BF' ['76', '00'])
 
 def d_cdChange2(packet):
-  print "test2"
+  logging.info("Running Custom 2")
+  core.pB_display.immediateText('Lights: On')
   WRITER.writeBusPacket('00', 'BF', ['76', '04'])
+
+def d_cdChange3(packet):
+  logging.info("Running Custom 3")
+  core.pB_display.immediateText('Custom')
+  customPacket = '/tmp/customCommand'
+  if os.exists(customPacket):
+    try:
+      pktFile = open(customPacket)
+      pkt = json.loads(pktFile.read())
+      pktFile.close()
+      WRITER.writeBusPacket(pkt['src'], pkt['dst'], pkt['data'])
+    except e:
+      logging.debug('Error on custom command: %s' % e)
+
+def d_cdChange4(packet):
+  logging.info("Running Custom 4")
+
+def d_cdChange5(packet):
+  logging.info("Running Custom 5")
+
+def d_cdChange6(packet):
+  logging.info("Running Custom 6")
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
 def d_custom_IKE(packet):

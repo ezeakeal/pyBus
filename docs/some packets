@@ -1,0 +1,59 @@
+3F 05 00 0C 01 01 turn off interior lights
+3F 05 00 0C 02 01 open trunk
+3F 05 00 0C 03 01 lock doors + fade out interior lights
+3F 05 00 0C 05 01 open trunk (again??)
+3F 05 00 0C 13 01 return some data, relating to light control?(unsure)
+3F 05 00 0C 30 01 turn on key buzzer for 2 seconds + fade-in/out interior lights
+3F 05 00 0C 34 01 lock/unlock doors
+
+3F 05 00 0C 41 01 Open rear driver window
+3F 05 00 0C 42 01 close rear driver window
+
+3F 05 00 0C 43 01 close rear passenger window
+3F 05 00 0C 44 01 open rear passenger window
+
+3F 05 00 0C 45 01 trigger unknown relay (coming from rear doors?)
+
+3F 05 00 0C 46 01 lock front passenger door only
+3F 05 00 0C 47 01 lock front driver door only
+
+3F 05 00 0C 49 01 trigger wipers
+3F 05 00 0C 4A 01 trigger unknown relay (under cluster)
+3F 05 00 0C 4B 01 trigger windshield washer pump for 3 seconds (no liquid sprayed)
+3F 05 00 0C 4E 01 turn-on clown nose for 3 seconds
+3F 05 00 0C 4F 01 lock all but driver door
+
+3F 05 00 0C 52 01 Open front driver window
+3F 05 00 0C 53 01 close front driver window
+
+3F 05 00 0C 54 01 Open front passenger window
+3F 05 00 0C 55 01 close front passenger window
+
+3F 05 00 0C 60 01 turn on interior lights for 3 seconds
+3F 05 00 0C 62 01 spray windshield washer fluid
+3F 05 00 0C 63 01 trigger trunk relay for 3 seconds (use 95 01 or 02 01 instead for release only)
+3F 05 00 0C 68 01 fade out interior lights
+3F 05 00 0C 70 01 flash hazards + turn on interior lights
+3F 05 00 0C 73 01 trigger many door relays, don't know what it does
+3F 05 00 0C 75 01 flash hazards for 3 seconds (no blinker in-dash)
+
+3F 05 00 0C 7E 01 open sunroof
+3F 05 00 0C 7F 01 close sunroof
+
+3F 05 00 0C 95 01 open trunk (yes, again!)
+3F 05 00 0C 97 01 lock/unlock doors
+
+
+
+
+- lock remote pressed:
+00 04 BF 72 12 DB
+00 05 BF 7A 70 00 B0 - interior light control
+00 04 BF 72 02 CB
+
+lights start to dim to off 8 seconds after press:
+00 05 BF 7A 30 00 F0 - interior light control
+
+unlock (quick press)
+00 04 BF 02 00 B9
+00 05 BF 7A 70 00 B0 - interior light control
