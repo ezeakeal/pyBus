@@ -99,7 +99,7 @@ def initialize(devPath):
   IBUS.waitClearBus() # Wait for the iBus to clear, then send some initialization signals
   initSignals()
   pB_display.immediateText('PyBus Up')
-  IBUS.writeBusPacket('3F', '00', ['0C', '60', '01'])
+  IBUS.writeBusPacket('3F', '00', ['0C', '4E', '01'])
 
 # close the USB device and whatever else is required
 def shutdown():

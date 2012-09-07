@@ -99,7 +99,7 @@ def d_cdChange1(packet):
 def d_cdChange2(packet):
   logging.info("Running Custom 2")
   core.pB_display.immediateText('Lights: On')
-  WRITER.writeBusPacket('00', 'BF', ['76', '04'])
+  WRITER.writeBusPacket('00', 'BF', ['76', '11'])
 
 def d_cdChange3(packet):
   logging.info("Running Custom 3")
