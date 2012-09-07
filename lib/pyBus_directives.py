@@ -117,7 +117,7 @@ def d_cdChange3(packet):
       pktFile.close()
       WRITER.writeBusPacket(pkt['src'], pkt['dst'], pkt['data'])
     except:
-      logging.debug('Error on custom command: %s' % e)
+      logging.debug('Error on custom command:')
       logging.error(traceback.format_exc())
 
 def d_cdChange4(packet):
