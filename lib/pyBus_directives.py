@@ -41,7 +41,7 @@ DIRECTIVES = {
     }
   },
   '50' : {
-    '68' : {
+    'C8' : {
       '01' : 'd_test'
     }
   }
@@ -88,10 +88,13 @@ def manage(packet):
 #####################################
 # All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
 
+def d_test(packet):
+  logging.info("Running Test")
+  
 def d_cdChange1(packet):
   logging.info("Running Custom 1")
   core.pB_display.immediateText('Lights: OFF')
-  WRITER.writeBusPacket('00','BF' ['76', '00'])
+  WRITER.writeBusPacket('00','BF', ['76', '00'])
 
 def d_cdChange2(packet):
   logging.info("Running Custom 2")
@@ -158,7 +161,7 @@ def _getTrackNumber():
   if ('status' in status):
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
-      cdSong = int(mpdStatus['song']) % 100
+      cdSong = int(mpdStatus['song']+1) % 100
       cdSongHundreds = int(int(mpdStatus['song']) / 100)
   return cdSongHundreds, cdSong    
 
