@@ -139,6 +139,8 @@ def writeCurrentTrack():
 
 def _getTrackNumber():
   status = core.pB_audio.getInfo()
+  cdSongHundreds = 0
+  cdSong = 0
   if ('status' in status):
     mpdStatus = status['status']
     if ('song' in mpdStatus and 'playlistlength' in mpdStatus):
