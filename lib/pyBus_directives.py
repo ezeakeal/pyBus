@@ -210,11 +210,12 @@ def d_cdRandom(packet):
 def speedTrigger(speed):
   global DOOR_LOCKED
   if (speed > 100):
-    fastSong = "Dethklok/Dethklok - The Gears.mp3"
+    fastSong = "Queen/Bohemian rhaposdy.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
         core.pB_audio.addSong(fastSong)
         core.pB_audio.playSong(fastSong)
+        core.pB_audio.seek(183)
         core.pB_display.immediateText('HOLY SHIT')
         WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
@@ -227,10 +228,12 @@ def speedTrigger(speed):
     if not DOOR_LOCKED:
       DOOR_LOCKED = True
       WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+      logging.debug("Set DOOR_LOCKED True")
   if (speed < 20):
     if DOOR_LOCKED:
       DOOR_LOCKED = False
-      WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+      WRITER.writeBusPacket('3F', '00', ['0C', '97', '00'])
+      logging.debug("Set DOOR_LOCKED False")
 
 
 

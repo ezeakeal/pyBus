@@ -34,9 +34,12 @@ def init():
   CLIENT = MPDClient()
   if mpdConnect(CLIENT, CON_ID):
     logging.info('Connected to MPD server')
-    update() # update music in mpd
+    CLIENT.setvol(100)
+    CLIENT.clear() # Clear current playlist
+    CLIENT.add('/') # Add all songs in library (TEMP)
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY  = CLIENT.listallinfo()
+    
     repeat(True) # Repeat all tracks
   else:
     logging.critical('Failed to connect to MPD server')
@@ -60,10 +63,14 @@ def pause():
   CLIENT.pause()
 
 def next():
+  stop()
   CLIENT.next()
+  play()
 
 def previous():
+  stop()
   CLIENT.previous()
+  play()
 
 def repeat(repeat, toggle=False):
   if toggle:
@@ -81,7 +88,7 @@ def random(random, toggle=False):
 
 def seek(delta):
   seekDest = int(float(CLIENT.status()['elapsed']) + delta)
-  playListID = int(CLIENT.status()['playlist'])
+  playListID = int(CLIENT.status()['song'])
   CLIENT.seek(playListID, seekDest)
 
 def getTrackInfo():
