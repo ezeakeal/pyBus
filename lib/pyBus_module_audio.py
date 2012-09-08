@@ -44,11 +44,6 @@ def init():
   else:
     logging.critical('Failed to connect to MPD server')
 
-# Nasty hack to avoid the glitch noise when changing track
-def glitchHack(vol):
-  command = "amixer set PCM -- %s%" % vol
-  os.system(command)
-
 # Updates MPD library
 def update():
   logging.info('Updating MPD Library')
@@ -74,14 +69,10 @@ def pause():
   CLIENT.pause()
 
 def next():
-  glitchHack(0)
   CLIENT.next()
-  glitchHack(100)
 
 def previous():
-  glitchHack(0)
   CLIENT.previous()
-  glitchHack(100)
 
 def repeat(repeat, toggle=False):
   if toggle:
