@@ -39,9 +39,7 @@ def init():
     CLIENT.setvol(100)
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY  = CLIENT.listallinfo()
-    m = alsaaudio.Mixer()   # defined alsaaudio.Mixer to change volume
-    m.setvolume(50) # set volume
-
+    
     repeat(True) # Repeat all tracks
   else:
     logging.critical('Failed to connect to MPD server')
@@ -50,7 +48,7 @@ def init():
 def glitchHack(vol):
   command = "amixer set PCM -- %s%" % vol
   os.system(command)
-  
+
 # Updates MPD library
 def update():
   logging.info('Updating MPD Library')
