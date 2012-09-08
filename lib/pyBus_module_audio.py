@@ -5,6 +5,7 @@ import pprint, os, sys, time, signal, logging
 from mpd import (MPDClient, CommandError)
 from socket import error as SocketError
 import pyBus_core as core
+import alsaaudio
 #####################################
 # GLOBALS
 #####################################
@@ -38,11 +39,18 @@ def init():
     CLIENT.setvol(100)
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY  = CLIENT.listallinfo()
-    
+    m = alsaaudio.Mixer()   # defined alsaaudio.Mixer to change volume
+    m.setvolume(50) # set volume
+
     repeat(True) # Repeat all tracks
   else:
     logging.critical('Failed to connect to MPD server')
 
+# Nasty hack to avoid the glitch noise when changing track
+def glitchHack(vol):
+  command = "amixer set PCM -- %s%" % vol
+  os.system(command)
+  
 # Updates MPD library
 def update():
   logging.info('Updating MPD Library')
@@ -68,14 +76,14 @@ def pause():
   CLIENT.pause()
 
 def next():
-  CLIENT.setvol(0)
+  glitchHack(0)
   CLIENT.next()
-  CLIENT.setvol(100)
+  glitchHack(100)
 
 def previous():
-  CLIENT.setvol(0)
+  glitchHack(0)
   CLIENT.previous()
-  CLIENT.setvol(100)
+  glitchHack(100)
 
 def repeat(repeat, toggle=False):
   if toggle:

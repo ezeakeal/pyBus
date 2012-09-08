@@ -68,12 +68,7 @@ class ibusFace ( ):
     char = '%02X' % ord(char)
     return char
 
-  # Write a character to the iBus and flush, flushing may not be required but then again, it could be..
-  def writeChar(self, char):
-    wChar = chr(char)
-    self.SDEV.write(wChar)
-    self.SDEV.flush()
-
+  # Write a string of data created from complete contents of packet
   def writeFullPacket(self, packet):
     data = ''.join(chr(p) for p in packet)
     self.SDEV.write(data)
@@ -110,8 +105,6 @@ class ibusFace ( ):
         logging.debug("Writing Packet:")
         logging.debug(packet)
         self.writeFullPacket(packet)
-        # for p in packet:
-        #   self.writeChar(p)
       else:
         time.sleep(0.02)
         logging.info("Waiting for bus to clear before writing!")
