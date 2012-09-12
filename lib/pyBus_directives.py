@@ -18,6 +18,11 @@ import traceback
 # second level is destination
 # third level is data : function name
 DIRECTIVES = {
+  '44' : {
+    'FF' : {
+      '7400' : 'd_shutDown'
+    }
+  },
   '80' : {
     'BF' : {
       'ALL' : 'd_custom_IKE' # Use ALL to send all data to a particular function
@@ -51,6 +56,7 @@ DIRECTIVES = {
     }
   }
 }
+
 DOOR_LOCKED = False
 WRITER = None
 
@@ -93,6 +99,10 @@ def manage(packet):
 #####################################
 # All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
 
+def d_shutDown(packet):
+  core.pB_display.immediateText('Shutdown')
+  core.turnOff()
+  
 def d_test(packet):
   logging.info("Running Test")
   
@@ -237,14 +247,14 @@ def d_cdRandom(packet):
    
 def speedTrigger(speed):
   global DOOR_LOCKED
-  if (speed > 100):
+  if (speed > 10):
     fastSong = "Queen/Bohemian rhaposdy.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
         core.pB_audio.addSong(fastSong)
         core.pB_audio.playSong(fastSong)
         core.pB_audio.seek(183)
-        core.pB_display.immediateText('HOLY SHIT')
+        core.pB_display.immediateText('SCARAMUSCH!')
         WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
@@ -260,7 +270,10 @@ def speedTrigger(speed):
   if (speed < 5):
     if DOOR_LOCKED:
       DOOR_LOCKED = False
+      WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
       WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
+      WRITER.writeBusPacket('3F', '00', ['0C', '97', '01'])
+
       logging.debug("Set DOOR_LOCKED False")
 
 

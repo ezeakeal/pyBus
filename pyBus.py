@@ -37,9 +37,9 @@ def createParser():
 #####################################
 # MAIN
 #####################################
-parser = createParser()
-results = parser.parse_args()
-loglevel      = results.verbose
+parser   = createParser()
+results  = parser.parse_args()
+loglevel = results.verbose
 
 signal.signal(signal.SIGINT, signal_handler_quit)
 configureLogging(loglevel)

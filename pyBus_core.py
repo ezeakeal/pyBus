@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, binascii, termcolor, json, logging
+import os, sys, time, signal, binascii, termcolor, json, logging, subprocess
 from time import strftime as date
 
 sys.path.append( './lib/' )
@@ -38,10 +38,10 @@ LOCATIONS = {
   'FF' : 'Broadcast'
 }
 
-LOGFILE = "/music/pybus.log"
+LOGFILE           = "/music/pyBus/pybus.log"
 PYBUS_SOCKET_FILE = '/tmp/ibus_custom.log'
-IBUS = None
-REGISTERED = False # This is a temporary measure until state driven behaviour is implemented
+IBUS              = None
+REGISTERED        = False # This is a temporary measure until state driven behaviour is implemented
 
 #####################################
 # FUNCTIONS
@@ -110,3 +110,6 @@ def shutdown():
 
 def run():
   readBusLoop()
+
+def turnOff():
+  subprocess.check_call("halt")
