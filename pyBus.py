@@ -18,10 +18,25 @@ def print_usage():
   print "%s <PATH_TO_DEVICE>" % (sys.argv[0])
   print "Eg: %s /dev/ttyUSB0" % (sys.argv[0])
 
+def compress_old_truncate():
+  logfile = core.LOGFILE
+  compressed_filename = logfile + '.gz'
+  num_append = 1
+  while os.path.exists(compressed_filename + num_append):
+    num_append = num_append + 1
+  f_in = open(logfile, 'rb')
+  f_out = gzip.open(compressed_filename, 'wb')
+  f_out.writelines(f_in)
+  f_out.close()
+  f_in.truncate()
+  f_in.close()
+
 def configureLogging(numeric_level):
   logfile = core.LOGFILE
+  if os.path.exists(logfile):
+    compress_old_truncate()
   if not isinstance(numeric_level, int):
-    numeric_level=0
+    numeric_level=1
   logging.basicConfig(
     filename=logfile, 
     level=numeric_level,
