@@ -32,8 +32,12 @@ def compress_old_truncate():
     f_out.close()
   except:
     logging.critical("There has been an error archiving log file!")
+  f_in.close()
+  f_in = open(logfile, 'w')
   f_in.truncate()
   f_in.close()
+
+  
 
 def configureLogging(numeric_level):
   logfile = core.LOGFILE
