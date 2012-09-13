@@ -1,4 +1,5 @@
 import serial, time, logging
+
 #------------------------------------
 # CLASS for iBus communications
 #------------------------------------
@@ -14,6 +15,7 @@ class ibusFace ( ):
     )
     self.SDEV.setDTR(True)
     self.SDEV.flushInput()
+    self.SDEV.lastWrite = int(round(time.time() * 1000))
 
   # Wait for a significant delay in the bus before parsing stuff (signals separated by pauses)
   def waitClearBus(self):
@@ -100,13 +102,14 @@ class ibusFace ( ):
     
     packetSent = False
     while not packetSent:
-      if (self.SDEV.getCTS()):
+      if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
         packetSent = True
         logging.debug("Writing Packet:")
         logging.debug(packet)
         self.writeFullPacket(packet)
+        self.SDEV.lastWrite = int(round(time.time() * 1000))
       else:
-        time.sleep(0.02)
+        time.sleep(0.01)
         logging.info("Waiting for bus to clear before writing!")
 
   def close(self):
