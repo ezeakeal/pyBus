@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, traceback, logging, argparse
+import os, sys, time, signal, traceback, logging, argparse, gzip
 import pyBus_core as core
 
 #####################################
