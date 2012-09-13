@@ -25,6 +25,7 @@ def compress_old_truncate():
   while os.path.exists("%s.%s" %(compressed_filename, num_append)):
     num_append = num_append + 1
   f_in = open(logfile, 'wr')
+  print compressed_filename
   f_out = gzip.open(compressed_filename, 'wb')
   f_out.writelines(f_in)
   f_out.close()
