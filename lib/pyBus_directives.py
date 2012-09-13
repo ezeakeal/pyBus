@@ -247,7 +247,7 @@ def d_cdRandom(packet):
    
 def speedTrigger(speed):
   global DOOR_LOCKED
-  if (speed > 10):
+  if (speed > 80):
     fastSong = "Queen/Bohemian rhaposdy.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
