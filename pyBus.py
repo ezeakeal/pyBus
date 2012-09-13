@@ -40,7 +40,7 @@ def configureLogging(numeric_level):
   if os.path.exists(logfile):
     compress_old_truncate()
   if not isinstance(numeric_level, int):
-    numeric_level=1
+    numeric_level=0
   logging.basicConfig(
     filename=logfile, 
     level=numeric_level,
