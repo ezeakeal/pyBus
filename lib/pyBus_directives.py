@@ -270,9 +270,5 @@ def speedTrigger(speed):
   if (speed < 5):
     if DOOR_LOCKED:
       DOOR_LOCKED = False
-      WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
+      WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
       logging.debug("Set DOOR_LOCKED False")
-
-
-
-
