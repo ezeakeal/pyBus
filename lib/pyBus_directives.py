@@ -20,7 +20,7 @@ import traceback
 DIRECTIVES = {
   '44' : {
     'BF' : {
-      '7400FF' : 'd_keyOut'
+      '7401FF' : 'd_keyOut'
     }
   },
   '80' : {
