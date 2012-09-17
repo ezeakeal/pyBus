@@ -101,6 +101,7 @@ def manage(packet):
 # All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
 
 def d_keyOut(packet):
+  global DOOR_LOCKED
   core.pB_display.immediateText('Shutdown')
   if DOOR_LOCKED:
     DOOR_LOCKED = False
