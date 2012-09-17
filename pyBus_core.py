@@ -20,7 +20,7 @@ LOCATIONS = {
   '30' : '?????',
   '3B' : 'NAV Navigation/Videomodule',
   '43' : 'MenuScreen',
-  '44' : '?????',
+  '44' : 'Ignition?',
   '50' : 'MFL Multi Functional Steering Wheel Buttons',
   '60' : 'PDC Park Distance Control',
   '68' : 'RAD Radio',
@@ -110,6 +110,3 @@ def shutdown():
 
 def run():
   readBusLoop()
-
-def turnOff():
-  subprocess.check_call("halt")

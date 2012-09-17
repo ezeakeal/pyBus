@@ -19,13 +19,8 @@ import traceback
 # third level is data : function name
 DIRECTIVES = {
   '44' : {
-    'FF' : {
-      '7400' : 'd_keyOut'
-    }
-  },
-  '44' : {
     'BF' : {
-      '7400' : 'd_keyOut'
+      '7400FF' : 'd_keyOut'
     }
   },
   '80' : {
@@ -111,7 +106,6 @@ def d_keyOut(packet):
     DOOR_LOCKED = False
     WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
     logging.debug("Set DOOR_LOCKED False")
-  core.turnOff()
   
 def d_test(packet):
   logging.info("Running Test")
