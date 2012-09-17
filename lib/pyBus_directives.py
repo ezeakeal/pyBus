@@ -20,7 +20,12 @@ import traceback
 DIRECTIVES = {
   '44' : {
     'FF' : {
-      '7400' : 'd_shutDown'
+      '7400' : 'd_keyOut'
+    }
+  },
+  '44' : {
+    'BF' : {
+      '7400' : 'd_keyOut'
     }
   },
   '80' : {
@@ -58,6 +63,7 @@ DIRECTIVES = {
 }
 
 DOOR_LOCKED = False
+FASTSONG_ON = True
 WRITER = None
 
 #####################################
@@ -99,8 +105,12 @@ def manage(packet):
 #####################################
 # All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
 
-def d_shutDown(packet):
+def d_keyOut(packet):
   core.pB_display.immediateText('Shutdown')
+  if DOOR_LOCKED:
+    DOOR_LOCKED = False
+    WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
+    logging.debug("Set DOOR_LOCKED False")
   core.turnOff()
   
 def d_test(packet):
@@ -108,34 +118,25 @@ def d_test(packet):
   
 def d_cdChange1(packet):
   logging.info("Running Custom 1")
-  core.pB_display.immediateText('Lights: OFF')
-  WRITER.writeBusPacket('00','BF', ['76', '00'])
+  FASTSONG_ON = not FASTSONG_ON
+  if FASTSONG_ON:
+    core.pB_display.immediateText('FS: On')
+  else: 
+    core.pB_display.immediateText('FS: Off')
 
 def d_cdChange2(packet):
   logging.info("Running Custom 2")
-  core.pB_display.immediateText('Lights: On')
-  WRITER.writeBusPacket('00', 'BF', ['76', '11'])
 
 def d_cdChange3(packet):
   logging.info("Running Custom 3")
-  core.pB_display.immediateText('Custom')
-  customPacket = '/tmp/customCommand'
-  if os.path.exists(customPacket):
-    try:
-      pktFile = open(customPacket)
-      pkt = json.loads(pktFile.read())
-      pktFile.close()
-      WRITER.writeBusPacket(pkt['src'], pkt['dst'], pkt['data'])
-    except:
-      logging.debug('Error on custom command:')
-      logging.error(traceback.format_exc())
-
+  
 def d_cdChange4(packet):
   logging.info("Running Custom 4")
   core.pB_display.immediateText('UPDATE')
   core.pB_audio.update()
   core.pB_audio.addAll()
-
+  core.initSignals()
+  
 def d_cdChange5(packet):
   logging.info("Running Custom 5")
 
@@ -247,7 +248,7 @@ def d_cdRandom(packet):
    
 def speedTrigger(speed):
   global DOOR_LOCKED
-  if (speed > 100):
+  if (speed > 100) and (FASTSONG_ON):
     fastSong = "Queen/Bohemian rhaposdy.mp3"
     try:
       if (core.pB_audio.getInfoByPath(fastSong)['id'] != core.pB_audio.getTrackID()):
@@ -259,16 +260,11 @@ def speedTrigger(speed):
         WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
-
     except:
       logging.warning("Exception changing track")
+      
   if (speed > 5):
     if not DOOR_LOCKED:
       DOOR_LOCKED = True
       WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
       logging.debug("Set DOOR_LOCKED True")
-  if (speed < 5):
-    if DOOR_LOCKED:
-      DOOR_LOCKED = False
-      WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
-      logging.debug("Set DOOR_LOCKED False")
