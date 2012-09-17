@@ -106,6 +106,10 @@ def d_keyOut(packet):
     DOOR_LOCKED = False
     WRITER.writeBusPacket('3F', '00', ['0C', '03', '01'])
     logging.debug("Set DOOR_LOCKED False")
+  WRITER.writeBusPacket('3F','00', ['0C', '53', '01'])
+  WRITER.writeBusPacket('3F','00', ['0C', '42', '01'])
+  WRITER.writeBusPacket('3F','00', ['0C', '55', '01'])
+  WRITER.writeBusPacket('3F','00', ['0C', '43', '01'])
   
 def d_test(packet):
   logging.info("Running Test")
