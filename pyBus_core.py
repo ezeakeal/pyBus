@@ -89,10 +89,10 @@ def initialize():
   REGISTERED=False
   # Initialize the iBus interface
   while IBUS == None:
-    if os.path.exists(devPath):
-      IBUS = ibusFace(devPath)
+    if os.path.exists(DEVPATH):
+      IBUS = ibusFace(DEVPATH)
     else:
-      logging.warning("USB interface not found at (%s). Waiting 2 seconds.", devPath)
+      logging.warning("USB interface not found at (%s). Waiting 2 seconds.", DEVPATH)
       time.sleep(2)
   pB_audio.init()
   pB_display.init(IBUS)
