@@ -107,6 +107,7 @@ def shutdown():
   pB_display.end()
   if IBUS:
     IBUS.close()
+    IBUS = None
   pB_audio.stop()
 
 def run():
