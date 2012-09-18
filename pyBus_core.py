@@ -38,6 +38,7 @@ LOCATIONS = {
   'FF' : 'Broadcast'
 }
 
+DEVPATH           = "/dev/ttyUSB0"
 LOGFILE           = "/music/pyBus/pybus.log"
 PYBUS_SOCKET_FILE = '/tmp/ibus_custom.log'
 IBUS              = None
@@ -83,8 +84,8 @@ def initSignals():
   IBUS.writeBusPacket('18', 'FF', ['02', '01'])
 
 # Initializes modules as required and opens files for writing
-def initialize(devPath):
-  global IBUS, REGISTERED
+def initialize():
+  global IBUS, REGISTERED, DEVPATH
   REGISTERED=False
   # Initialize the iBus interface
   while IBUS == None:

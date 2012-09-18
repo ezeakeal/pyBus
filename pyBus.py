@@ -68,9 +68,10 @@ signal.signal(signal.SIGINT, signal_handler_quit)
 configureLogging(loglevel)
 
 devPath = sys.argv[1]
+core.DEVPATH=devPath
 while True:
   try:
-    core.initialize(devPath)
+    core.initialize()
     core.run()
   except Exception:
     logging.error("I just hit some weird exception:")
