@@ -52,7 +52,8 @@ DIRECTIVES = {
   },
   '50' : {
     'C8' : {
-      '01' : 'd_test'
+      '01'   : 'd_RT',
+      '3B40' : 'd_RT'
     }
   }
 }
@@ -112,10 +113,15 @@ def d_keyOut(packet):
   WRITER.writeBusPacket('3F','00', ['0C', '55', '01'])
   WRITER.writeBusPacket('3F','00', ['0C', '43', '01'])
   
-def d_test(packet):
-  logging.info("Running Test")
+def d_RT(packet):
+  logging.info("Restarting")
+  core.pB_display.immediateText('Restart')
+  core.shutdown()
+  core.initialize(devPath)
+  core.run()
   
 def d_cdChange1(packet):
+  global FASTSONG_ON
   logging.info("Running Custom 1")
   FASTSONG_ON = not FASTSONG_ON
   if FASTSONG_ON:
