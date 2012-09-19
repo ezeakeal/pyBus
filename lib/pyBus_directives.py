@@ -117,7 +117,7 @@ def d_RT(packet):
   logging.info("Restarting")
   core.pB_display.immediateText('Restart')
   core.shutdown()
-  core.initialize(devPath)
+  core.initialize()
   core.run()
   
 def d_cdChange1(packet):
