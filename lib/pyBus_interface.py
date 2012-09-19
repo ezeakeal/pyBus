@@ -20,6 +20,7 @@ class ibusFace ( ):
 
   # Wait for a significant delay in the bus before parsing stuff (signals separated by pauses)
   def waitClearBus(self):
+    logging.debug("Waiting for clear bus")
     oldTime = time.time()
     while True:
       # Wait for large interval
@@ -69,6 +70,7 @@ class ibusFace ( ):
   def readChar(self):
     char = self.SDEV.read(1)
     char = '%02X' % ord(char)
+    logging.debug("Read %s" % char)
     return char
 
   # Write a string of data created from complete contents of packet
