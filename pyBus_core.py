@@ -104,6 +104,7 @@ def initialize():
 
 # close the USB device and whatever else is required
 def shutdown():
+  global IBUS
   pB_display.end()
   if IBUS:
     IBUS.close()
