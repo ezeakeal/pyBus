@@ -70,7 +70,6 @@ class ibusFace ( ):
   def readChar(self):
     char = self.SDEV.read(1)
     char = '%02X' % ord(char)
-    logging.debug("Read %s" % char)
     return char
 
   # Write a string of data created from complete contents of packet
