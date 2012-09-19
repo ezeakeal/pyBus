@@ -16,6 +16,7 @@ class ibusFace ( ):
     self.SDEV.setDTR(True)
     self.SDEV.flushInput()
     self.SDEV.lastWrite = int(round(time.time() * 1000))
+    logging.debug("Initialized iBus")
 
   # Wait for a significant delay in the bus before parsing stuff (signals separated by pauses)
   def waitClearBus(self):
