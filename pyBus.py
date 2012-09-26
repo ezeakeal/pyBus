@@ -38,7 +38,9 @@ def compress_old_truncate():
   f_in.close()
 
   
-
+#################################
+# Configure Logging for pySel
+#################################
 def configureLogging(numeric_level):
   logfile = core.LOGFILE
   if os.path.exists(logfile):

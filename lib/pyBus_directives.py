@@ -59,7 +59,7 @@ DIRECTIVES = {
 }
 
 DOOR_LOCKED = False
-FASTSONG_ON = True
+FASTSONG_ON = False
 WRITER = None
 
 #####################################
@@ -272,4 +272,3 @@ def speedTrigger(speed):
     if not DOOR_LOCKED:
       DOOR_LOCKED = True
       WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
-      logging.debug("Set DOOR_LOCKED True")
