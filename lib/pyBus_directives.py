@@ -20,7 +20,7 @@ import traceback
 DIRECTIVES = {
   '44' : {
     'BF' : {
-      '7401FF' : 'd_keyOut'
+      'ALL'    : 'd_keyAll'
     }
   },
   '80' : {
@@ -100,6 +100,19 @@ def manage(packet):
   
 #####################################
 # All directives should have a d_ prefix as we are searching GLOBALLY for function names.. so best have unique enough names
+
+def d_keyAll(packet):
+  dataString = ''.join(packet['dat'])
+  if dataString == "7401FF":
+    d_keyOut(packet)
+  if dataString.startswith("7404"):
+    d_keyIn(packet)
+
+def d_keyIn(packet):
+  core.pB_display.immediateText('Startup')
+  core.shutdown()
+  core.initialize()
+  core.run()
 
 def d_keyOut(packet):
   global DOOR_LOCKED
