@@ -36,7 +36,6 @@ def compress_old_truncate():
   f_in = open(logfile, 'w')
   f_in.truncate()
   f_in.close()
-
   
 #################################
 # Configure Logging for pySel
@@ -76,7 +75,7 @@ while True:
     core.initialize()
     core.run()
   except Exception:
-    logging.error("I just hit some weird exception:")
+    logging.error("I just hit a weird exception:")
     logging.error(traceback.format_exc())
     logging.info("Going to sleep 5 seconds and restart")
     core.shutdown()

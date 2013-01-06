@@ -55,7 +55,7 @@ class ibusFace ( ):
     dataLen = int(packet['len'], 16) - 2
     if dataLen > 20:
       logging.critical("Length of +20 found, no useful packet is this long.. cleaning up")
-      waitClearBus()
+      self.waitClearBus()
       return None
 
     dataTmp = []

@@ -5,7 +5,7 @@ import pprint, os, sys, time, signal, logging
 from mpd import (MPDClient, CommandError)
 from socket import error as SocketError
 import pyBus_core as core
-import alsaaudio
+
 #####################################
 # GLOBALS
 #####################################
