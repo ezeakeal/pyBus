@@ -132,8 +132,10 @@ def d_cdChange1(packet):
 def d_cdChange2(packet):
   logging.info("Play/Stop")
   status = core.pB_audio.getInfo()
-  print status
-  core.pB_audio.stop()
+  if (status['status']['state'] == "play"):
+    core.pB_audio.pause()
+  else:
+    core.pB_audio.play()
 
 
 def d_cdChange3(packet):
