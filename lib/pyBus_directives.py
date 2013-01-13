@@ -130,7 +130,11 @@ def d_cdChange1(packet):
     core.pB_display.immediateText('FS: Off')
 
 def d_cdChange2(packet):
-  logging.info("Running Custom 2")
+  logging.info("Play/Stop")
+  status = core.pB_audio.getInfo()
+  print status
+  core.pB_audio.stop()
+
 
 def d_cdChange3(packet):
   logging.info("Running Custom 3")
@@ -146,7 +150,11 @@ def d_cdChange5(packet):
   logging.info("Running Custom 5")
 
 def d_cdChange6(packet):
-  logging.info("Running Custom 6")
+  logging.info("RESET")
+  core.pB_display.immediateText('RESET')
+  core.shutdown()
+  core.initialize()
+  core.run()
 
 # This packet is used to parse all messages from the IKE (instrument control electronics), as it contains speed/RPM info. But the data for speed/rpm will vary, so it must be parsed via a method linked to 'ALL' data in the JSON DIRECTIVES
 def d_custom_IKE(packet):
