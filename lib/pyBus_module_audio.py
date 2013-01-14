@@ -13,7 +13,7 @@ HOST     = 'localhost'
 PORT     = '6600'
 PASSWORD = False
 CON_ID   = {'host':HOST, 'port':PORT}
-VOLUME   = 50
+VOLUME   = 90
 
 CLIENT   = None
 PLAYLIST = None

@@ -2,7 +2,6 @@
 
 import os, sys, time, signal, json, traceback, logging
 import threading
-import pyBus_core as core
 import datetime
 
 #####################################
@@ -74,6 +73,15 @@ def setDisplay(safe):
   global DISPLAY_TEXT
   DISPLAY_TEXT = safe
 
+def init(IBUS):
+  global WRITER
+  WRITER = busWriter(IBUS)
+  WRITER.start()
+
+def end():
+  if WRITER:
+    WRITER.stop()
+
 #------------------------------------
 # THREAD FOR TICKING AND WRITING
 #------------------------------------
@@ -100,12 +108,3 @@ class busWriter ( threading.Thread ):
     self.IBUS = None
     self._Thread__stop()
 #------------------------------------
-
-def init(IBUS):
-  global WRITER
-  WRITER = busWriter(IBUS)
-  WRITER.start()
-
-def end():
-  if WRITER:
-    WRITER.stop()
