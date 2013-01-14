@@ -75,7 +75,7 @@ def init(writer):
   WRITER = writer
   LISTENER = eventDriver(WRITER)
   pB_display.init(WRITER)
-  pB_audio.init
+  pB_audio.init()
 
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
   SESSION_DATA["DOOR_LOCKED"] = False
@@ -110,7 +110,7 @@ def manage(packet):
   return result
   
 def shutDown():
-  LISTENER.end()
+  LISTENER.stop()
   pB_audio.stop()
   pB_audio.quit()
   pB_display.end()

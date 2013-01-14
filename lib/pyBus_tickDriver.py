@@ -77,15 +77,7 @@ TICK = 0.01 # sleep interval in seconds used between iBUS reads
 #####################################
 # Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
-  global WRITER, LISTENER, STATE_DATA
-  WRITER = writer
-  LISTENER = eventDriver(WRITER)
-  pB_display.init(WRITER)
-  pB_audio.init
-
-  WRITER.writeBusPacket('18', 'FF', ['02', '01'])
-
-  LISTENER.start()
+  logging.info("In empty ticker")
 
 # Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
 def manage(packet):
@@ -128,7 +120,7 @@ class eventDriver ( threading.Thread ):
   def run(self):
     logging.info('Event listener initialized')
     while True:
-      packet = IBUS.readBusPacket()
+      packet = self.IBUS.readBusPacket()
       if packet:
         pB_eDriver.manage(packet)
       time.sleep(TICK) # sleep a bit
