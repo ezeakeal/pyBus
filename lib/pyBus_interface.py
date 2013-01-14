@@ -122,6 +122,7 @@ class ibusFace ( ):
   # The packet is then sent if the CTS signal is good (Clear To Send)
   # TODO: Read to verify the packet we send is seen
   def writeBusPacket(self, src, dst, data):
+    time.sleep(0.01) # pause a tick
     length = '%02X' % (2 + len(data))
     packet = [src, length, dst]
     for p in data:
@@ -136,12 +137,14 @@ class ibusFace ( ):
     
     packetSent = False
     while not packetSent:
+      logging.debug("WRITE: %s" % packet)
       if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
         packetSent = True
-        logging.debug("WRITE: %s" % packet)
         self.writeFullPacket(packet)
+        logging.debug("WRITE: SUCCESS")
         self.SDEV.lastWrite = int(round(time.time() * 1000))
       else:
+        logging.debug("WRITE: WAIT")
         time.sleep(0.01)
         logging.info("Waiting for bus to clear before writing!")
 
