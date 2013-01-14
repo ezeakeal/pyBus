@@ -128,6 +128,7 @@ class ibusFace ( ):
     for p in data:
       packet.append(p)
 
+    logging.debug("WRITE: %s" % packet)
     for i in range(len(packet)):
       packet[i] = int('0x%s' % packet[i], 16)
 
@@ -137,7 +138,6 @@ class ibusFace ( ):
     
     packetSent = False
     while not packetSent:
-      logging.debug("WRITE: %s" % packet)
       if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
         packetSent = True
         self.writeFullPacket(packet)
