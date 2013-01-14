@@ -137,9 +137,11 @@ class ibusFace ( ):
     lastInd=len(packet) - 1
     packet[lastInd] = chk # packet is an array of int
     
-    PACKET_STACK.append(packet)
+    self.PACKET_STACK.append(packet)
   
   def pushPacketsToBus(self):
+    logging.info("WRITE: PACKETS")
+    logging.info(self.PACKET_STACK)
     while (len(self.PACKET_STACK) > 0):
       packet = self.PACKET_STACK.pop()
       packet = packet.split(' ')
