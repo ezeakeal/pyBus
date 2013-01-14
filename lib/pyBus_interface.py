@@ -90,7 +90,7 @@ class ibusFace ( ):
       dataLen = dataLen - 1
     packet['dat'] = dataTmp
     packet['xor'] = self.readChar()
-    valStr = [packet['src'], packet['src'], packet['len'], packet['dst'], packet['dat'], packet['xor']]
+    valStr = [packet['src'], packet['len'], packet['dst'], packet['dat'], packet['xor']]
     logging.debug("READ: %s" % valStr)
     return packet
 
