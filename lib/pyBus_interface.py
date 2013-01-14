@@ -20,6 +20,7 @@ class ibusFace ( ):
 
   # Wait for a significant delay in the bus before parsing stuff (signals separated by pauses)
   def waitClearBus(self):
+    self.writeBusPacket('18', 'FF', ['02','00'])
     logging.debug("Waiting for clear bus")
     oldTime = time.time()
     while True:
@@ -69,7 +70,11 @@ class ibusFace ( ):
   # Read in one character from the bus and convert to hex
   def readChar(self):
     char = self.SDEV.read(1)
-    char = '%02X' % ord(char)
+    try:
+      char = '%02X' % ord(char)
+    except SerialException, e: 
+      logging.warning("Hit a serialException: %s" % e)
+      pass
     return char
 
   # Write a string of data created from complete contents of packet
