@@ -100,7 +100,7 @@ def manage(packet):
     else:
       methodName = dstDir[dataString]
   except Exception, e:
-    logging.warning(e)
+    logging.warning("No Directive: %s" % e)
     
   result = None
   if methodName != None:

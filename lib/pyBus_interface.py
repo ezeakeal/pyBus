@@ -90,7 +90,8 @@ class ibusFace ( ):
       dataLen = dataLen - 1
     packet['dat'] = dataTmp
     packet['xor'] = self.readChar()
-    logging.debug("READ: %s" % packet.values())
+    valStr = [packet['src'], packet['src'], packet['len'], packet['dst'], packet['dat'], packet['xor']]
+    logging.debug("READ: %s" % valStr)
     return packet
 
   # Read in one character from the bus and convert to hex
