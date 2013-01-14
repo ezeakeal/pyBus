@@ -38,9 +38,6 @@ def initialize():
   pB_eDriver.init(IBUS)
   pB_tDriver.init(IBUS)
   
-  pB_display.immediateText('PyBus Up')
-  IBUS.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
-
 # close the USB device and whatever else is required
 def shutdown():
   global IBUS

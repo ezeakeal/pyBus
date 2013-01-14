@@ -83,6 +83,10 @@ def init(writer):
 
   LISTENER.start()
 
+  pB_display.immediateText('PyBus Up')
+  WRITER.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
+
+
 # Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
 def manage(packet):
   src = packet['src']
@@ -121,6 +125,7 @@ def shutDown():
 class eventDriver ( threading.Thread ):
   def __init__ ( self, ibus ):
     self.IBUS = ibus
+    print ibus
     threading.Thread.__init__ ( self )
   
   def run(self):
