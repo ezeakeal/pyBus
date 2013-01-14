@@ -77,7 +77,6 @@ def init(writer):
   pB_display.init(WRITER)
   pB_audio.init()
 
-  WRITER.writeBusPacket('18', 'FF', ['02', '01'])
   SESSION_DATA["DOOR_LOCKED"] = False
   SESSION_DATA["FASTSONG_ON"] = False
 
@@ -85,7 +84,7 @@ def init(writer):
 
   pB_display.immediateText('PyBus Up')
   WRITER.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
-
+  WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
 # Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
 def manage(packet):
@@ -125,7 +124,6 @@ def shutDown():
 class eventDriver ( threading.Thread ):
   def __init__ ( self, ibus ):
     self.IBUS = ibus
-    print ibus
     threading.Thread.__init__ ( self )
   
   def run(self):

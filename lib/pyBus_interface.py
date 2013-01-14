@@ -90,7 +90,7 @@ class ibusFace ( ):
       dataLen = dataLen - 1
     packet['dat'] = dataTmp
     packet['xor'] = self.readChar()
-    logging.info("".join(packet))
+    logging.debug("READ: %s" % packet.values())
     return packet
 
   # Read in one character from the bus and convert to hex
@@ -137,8 +137,7 @@ class ibusFace ( ):
     while not packetSent:
       if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
         packetSent = True
-        logging.debug("Writing Packet:")
-        logging.debug(packet)
+        logging.debug("WRITE: %s" % packet)
         self.writeFullPacket(packet)
         self.SDEV.lastWrite = int(round(time.time() * 1000))
       else:
