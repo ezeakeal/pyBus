@@ -111,9 +111,10 @@ def manage(packet):
   
 def shutDown():
   LISTENER.end()
-  pB_display.end()
+  pB_audio.stop()
   pB_audio.quit()
-
+  pB_display.end()
+  
 #------------------------------------
 # THREAD FOR TICKING AND WRITING
 #------------------------------------
@@ -125,9 +126,9 @@ class eventDriver ( threading.Thread ):
   def run(self):
     logging.info('Event listener initialized')
     while True:
-      packet = IBUS.readBusPacket()
+      packet = self.IBUS.readBusPacket()
       if packet:
-        pB_eDriver.manage(packet)
+        manage(packet)
       time.sleep(TICK) # sleep a bit
 
   def stop(self):

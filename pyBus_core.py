@@ -44,13 +44,12 @@ def initialize():
 # close the USB device and whatever else is required
 def shutdown():
   global IBUS
-  pB_eDriver.tearDown()
-  pB_tDriver.tearDown()
+  pB_eDriver.shutDown()
+  pB_tDriver.shutDown()
   
   if IBUS:
     IBUS.close()
     IBUS = None
-  pB_audio.stop()
 
 def run():
   readBusLoop()

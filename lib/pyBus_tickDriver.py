@@ -77,15 +77,13 @@ TICK = 0.01 # sleep interval in seconds used between iBUS reads
 #####################################
 # Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
-  global WRITER, LISTENER, SESSION_DATA
+  global WRITER, LISTENER, STATE_DATA
   WRITER = writer
   LISTENER = eventDriver(WRITER)
   pB_display.init(WRITER)
   pB_audio.init
 
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
-  SESSION_DATA["DOOR_LOCKED"] = False
-  SESSION_DATA["FASTSONG_ON"] = False
 
   LISTENER.start()
 
