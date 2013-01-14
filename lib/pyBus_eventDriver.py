@@ -77,7 +77,7 @@ def init(writer):
   pB_display.init(WRITER)
   pB_audio.init()
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
-  
+
   SESSION_DATA["DOOR_LOCKED"] = False
   SESSION_DATA["FASTSONG_ON"] = False
 
@@ -254,7 +254,6 @@ def d_cdSendStatus(packet):
 
 # Respond to the Poll for changer alive
 def d_cdPollResponse(packet):
-  REGISTERED = True
   WRITER.writeBusPacket('18', 'FF', ['02','00'])
   
 # Enable/Disable Random
