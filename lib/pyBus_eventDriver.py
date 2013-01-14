@@ -133,6 +133,7 @@ class eventDriver ( threading.Thread ):
       packet = self.IBUS.readBusPacket()
       if packet:
         manage(packet)
+      self.IBUS.pushPacketsToBus()
       time.sleep(TICK) # sleep a bit
 
   def stop(self):

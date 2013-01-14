@@ -41,6 +41,7 @@ class ibusFace ( ):
     self.SDEV.setDTR(True)
     self.SDEV.flushInput()
     self.SDEV.lastWrite = int(round(time.time() * 1000))
+    self.PACKET_STACK = []
     logging.debug("Initialized iBus")
 
   # Wait for a significant delay in the bus before parsing stuff (signals separated by pauses)
@@ -136,17 +137,23 @@ class ibusFace ( ):
     lastInd=len(packet) - 1
     packet[lastInd] = chk # packet is an array of int
     
-    packetSent = False
-    while not packetSent:
-      if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
-        packetSent = True
-        self.writeFullPacket(packet)
-        logging.debug("WRITE: SUCCESS")
-        self.SDEV.lastWrite = int(round(time.time() * 1000))
-      else:
-        logging.debug("WRITE: WAIT")
-        time.sleep(0.01)
-        logging.info("Waiting for bus to clear before writing!")
+    PACKET_STACK.append(packet)
+  
+  def pushPacketsToBus(self):
+    while (len(self.PACKET_STACK) > 0):
+      packet = self.PACKET_STACK.pop()
+      packet = packet.split(' ')
+      packetSent = False
+      while not packetSent:
+        if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
+          packetSent = True
+          self.writeFullPacket(packet)
+          logging.debug("WRITE: SUCCESS")
+          self.SDEV.lastWrite = int(round(time.time() * 1000))
+        else:
+          logging.debug("WRITE: WAIT")
+          time.sleep(0.01)
+          logging.info("Waiting for bus to clear before writing!")
 
   def close(self):
     self.SDEV.close()
