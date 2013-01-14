@@ -70,7 +70,7 @@ DIRECTIVES = {
 WRITER = None
 LISTENER = None
 STATE_DATA = {}
-TICK = 0.01 # sleep interval in seconds used between iBUS reads
+TICK = 0.5 # sleep interval in seconds used between iBUS reads
 
 #####################################
 # FUNCTIONS
@@ -81,56 +81,8 @@ def init(writer):
 
 # Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
 def manage(packet):
-  src = packet['src']
-  dst = packet['dst']
-  dataString = ''.join(packet['dat'])
-  methodName = None
+  logging.info("In empty ticker")
 
-  try:
-    dstDir = DIRECTIVES[src][dst]
-    if ('ALL'  in dstDir.keys()):
-      methodName = dstDir['ALL']
-    else:
-      methodName = dstDir[dataString]
-  except Exception, e:
-    logging.warning(e)
-    
-  result = None
-  if methodName != None:
-    methodToCall = globals()[methodName]
-    logging.debug("Directive found for packet - %s" % methodName)
-    result = methodToCall(packet)
-  else:
-    logging.debug("Directive not found for packet")
-
-  return result
-  
 def shutDown():
-  LISTENER.end()
-  pB_display.end()
+  logging.info("In empty ticker")
 
-#------------------------------------
-# THREAD FOR TICKING AND WRITING
-#------------------------------------
-class eventDriver ( threading.Thread ):
-  def __init__ ( self, ibus ):
-    self.IBUS = ibus
-    threading.Thread.__init__ ( self )
-  
-  def run(self):
-    logging.info('Event listener initialized')
-    while True:
-      packet = self.IBUS.readBusPacket()
-      if packet:
-        pB_eDriver.manage(packet)
-      time.sleep(TICK) # sleep a bit
-
-  def stop(self):
-    self.IBUS = None
-    self._Thread__stop()
-#------------------------------------
-
-class TriggerRestart(Exception):
-  pass
-class TriggerInit(Exception):
-  pass

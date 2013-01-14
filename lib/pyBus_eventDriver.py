@@ -73,7 +73,7 @@ TICK = 0.01 # sleep interval in seconds used between iBUS reads
 def init(writer):
   global WRITER, LISTENER, SESSION_DATA
   WRITER = writer
-  LISTENER = eventDriver(WRITER)
+  LISTENER = eventDriver(writer)
   pB_display.init(WRITER)
   pB_audio.init()
 
