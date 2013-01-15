@@ -114,7 +114,6 @@ def listen():
     packet = WRITER.readBusPacket()
     if packet:
       manage(packet)
-    WRITER.pushPacketsToBus()
     time.sleep(TICK) # sleep a bit
 
 def shutDown():
