@@ -1,5 +1,5 @@
 import web, os, sys, subprocess, commands, mimetypes, re
-import simplejson as JSON
+import json as JSON
 import pyBus_module_audio as pB_audio
 
 def enum(**enums):

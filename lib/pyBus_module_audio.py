@@ -5,7 +5,7 @@ import pprint, os, sys, time, signal, logging
 from mpd import (MPDClient, CommandError)
 from socket import error as SocketError
 import pyBus_core as core
-import alsaaudio
+
 #####################################
 # GLOBALS
 #####################################
@@ -13,7 +13,7 @@ HOST     = 'localhost'
 PORT     = '6600'
 PASSWORD = False
 CON_ID   = {'host':HOST, 'port':PORT}
-VOLUME   = 50
+VOLUME   = 90
 
 CLIENT   = None
 PLAYLIST = None
@@ -106,7 +106,14 @@ def getTrackInfo():
 def getInfo(lastID=-1):
   if CLIENT == None:
     init()
-  state = CLIENT.status()
+  state = None
+  while not state:
+    try:
+      state = CLIENT.status()
+    except Exception, e:
+      logging.warning("MPD lost connection while reading status")
+      time.sleep(.5)
+    
   if (state['state'] != "stop"):
     if ("songid" in state):
       songID = state['songid']
@@ -156,4 +163,3 @@ def  getTrackID():
     logging.warning("Unexpected Exception occured:")
     logging.warning(traceback.format_exc())
     return 0
-  
