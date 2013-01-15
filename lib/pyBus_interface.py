@@ -134,23 +134,15 @@ class ibusFace ( ):
     chk = self.getCheckSum(packet) 
     lastInd=len(packet) - 1
     packet[lastInd] = chk # packet is an array of int
-    
-    self.PACKET_STACK.insert(0, packet)
-    self.pushPacketsToBus() # this will attempt to write the packet in response to some event.
 
-  # if it cant due to a blockage, it is likely another packet is waiting to be written. 
-  # So dont wait until packet is sent, just keep trying to write the first one that came in
-  # Only exit once there is no packets left.
-  def pushPacketsToBus(self):
-    logging.info("WRITE: PACKETS")
-    logging.info(self.PACKET_STACK)
-    while (len(self.PACKET_STACK) > 0):
-      packet = self.PACKET_STACK.pop()
+    packetSent = False
+    while (not packetSent):
       logging.debug("WRITE: %s" % packet)
       if (self.SDEV.getCTS()) and ((int(round(time.time() * 1000)) - self.SDEV.lastWrite) > 10): # dont write packets to close together.. issues arise
         self.writeFullPacket(packet)
         logging.debug("WRITE: SUCCESS")
         self.SDEV.lastWrite = int(round(time.time() * 1000))
+        packetSent = True
       else:
         logging.debug("WRITE: WAIT")
         time.sleep(0.01)
