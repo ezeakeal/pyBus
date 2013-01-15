@@ -106,7 +106,8 @@ def getTrackInfo():
 def getInfo(lastID=-1):
   if CLIENT == None:
     init()
-  while True:
+  state = None
+  while not state:
     try:
       state = CLIENT.status()
     except Exception, e:
