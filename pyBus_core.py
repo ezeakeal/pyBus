@@ -49,5 +49,4 @@ def shutdown():
     IBUS = None
 
 def run():
-  while True:
-    time.sleep(1) # Truely upsetting. But as everything is now essentially a thread, I have to sort this business out.
+  pB_eDriver.listen()

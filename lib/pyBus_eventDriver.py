@@ -80,8 +80,6 @@ def init(writer):
   SESSION_DATA["DOOR_LOCKED"] = False
   SESSION_DATA["FASTSONG_ON"] = False
 
-  LISTENER.start()
-
   pB_display.immediateText('PyBus Up')
   WRITER.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
   
@@ -112,33 +110,20 @@ def manage(packet):
 
   return result
   
+def listen():
+  logging.info('Event listener initialized')
+  while True:
+    packet = WRITER.readBusPacket()
+    if packet:
+      manage(packet)
+    WRITER.pushPacketsToBus()
+    time.sleep(TICK) # sleep a bit
+
 def shutDown():
   if LISTENER: LISTENER.stop()
   pB_audio.stop()
   pB_audio.quit()
   pB_display.end()
-  
-#------------------------------------
-# THREAD FOR TICKING AND WRITING
-#------------------------------------
-class eventDriver ( threading.Thread ):
-  def __init__ ( self, ibus ):
-    self.IBUS = ibus
-    threading.Thread.__init__ ( self )
-  
-  def run(self):
-    logging.info('Event listener initialized')
-    while True:
-      packet = self.IBUS.readBusPacket()
-      if packet:
-        manage(packet)
-      self.IBUS.pushPacketsToBus()
-      time.sleep(TICK) # sleep a bit
-
-  def stop(self):
-    self.IBUS = None
-    self._Thread__stop()
-#------------------------------------
 
 class TriggerRestart(Exception):
   pass
