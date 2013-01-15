@@ -61,7 +61,6 @@ DIRECTIVES = {
 }
 
 WRITER = None
-LISTENER = None
 SESSION_DATA = {}
 TICK = 0.01 # sleep interval in seconds used between iBUS reads
 
@@ -70,9 +69,8 @@ TICK = 0.01 # sleep interval in seconds used between iBUS reads
 #####################################
 # Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
-  global WRITER, LISTENER, SESSION_DATA
+  global WRITER, SESSION_DATA
   WRITER = writer
-  LISTENER = eventDriver(writer)
   pB_display.init(WRITER)
   pB_audio.init()
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
@@ -120,7 +118,6 @@ def listen():
     time.sleep(TICK) # sleep a bit
 
 def shutDown():
-  if LISTENER: LISTENER.stop()
   pB_audio.stop()
   pB_audio.quit()
   pB_display.end()
