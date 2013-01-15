@@ -109,7 +109,7 @@ def getInfo(lastID=-1):
   while True:
     try:
       state = CLIENT.status()
-    except ConnectionError, e:
+    except Exception, e:
       logging.warning("MPD lost connection while reading status")
       time.sleep(.5)
     
