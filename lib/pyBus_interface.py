@@ -1,34 +1,33 @@
 import serial, time, logging
 
+# LOCATIONS, a mapping of hex codes seen in SRC/DST parts of packets. This WILL change across models/years.
+LOCATIONS = {
+  '00' : 'Broadcast',
+  '18' : 'CDW - CDC CD-Player',
+  '30' : '?????',
+  '3B' : 'NAV Navigation/Videomodule',
+  '43' : 'MenuScreen',
+  '44' : 'Ignition?',
+  '50' : 'MFL Multi Functional Steering Wheel Buttons',
+  '60' : 'PDC Park Distance Control',
+  '68' : 'RAD Radio',
+  '6A' : 'DSP Digital Sound Processor',
+  '7F' : '?????',
+  '80' : 'IKE Instrument Control Electronics',
+  'BF' : 'BROADCAST LCM?',
+  'C0' : 'MID Multi-Information Display Buttons',
+  'C8' : 'TEL Telephone',
+  'D0' : 'Navigation Location',
+  'E7' : 'OBC TextBar',
+  'E8' : '?????',
+  'ED' : 'Lights, Wipers, Seat Memory',
+  'F0' : 'BMB Board Monitor Buttons',
+  'FF' : 'Broadcast'
+}
 #------------------------------------
 # CLASS for iBus communications
 #------------------------------------
 class ibusFace ( ):
-  # LOCATIONS, a mapping of hex codes seen in SRC/DST parts of packets. This WILL change across models/years.
-  LOCATIONS = {
-    '00' : 'Broadcast',
-    '18' : 'CDW - CDC CD-Player',
-    '30' : '?????',
-    '3B' : 'NAV Navigation/Videomodule',
-    '43' : 'MenuScreen',
-    '44' : 'Ignition?',
-    '50' : 'MFL Multi Functional Steering Wheel Buttons',
-    '60' : 'PDC Park Distance Control',
-    '68' : 'RAD Radio',
-    '6A' : 'DSP Digital Sound Processor',
-    '7F' : '?????',
-    '80' : 'IKE Instrument Control Electronics',
-    'BF' : 'BROADCAST LCM?',
-    'C0' : 'MID Multi-Information Display Buttons',
-    'C8' : 'TEL Telephone',
-    'D0' : 'Navigation Location',
-    'E7' : 'OBC TextBar',
-    'E8' : '?????',
-    'ED' : 'Lights, Wipers, Seat Memory',
-    'F0' : 'BMB Board Monitor Buttons',
-    'FF' : 'Broadcast'
-}
-
   # Initialize the serial connection - then use some commands I saw somewhere once
   def __init__(self, devPath,):
     self.SDEV = serial.Serial(
