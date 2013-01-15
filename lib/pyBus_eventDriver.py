@@ -219,6 +219,7 @@ def d_cdStopPlaying(packet):
   pB_audio.pause()
   pB_display.setDisplay(False)
   cdSongHundreds, cdSong = _getTrackNumber()
+  print "here.."
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', cdSongHundreds, cdSong])
   
 # Start playing, turn on display writing
