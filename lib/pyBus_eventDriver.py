@@ -216,10 +216,11 @@ def d_cdScanBackard(packet):
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):
+  print "here.."
   pB_audio.pause()
   pB_display.setDisplay(False)
   cdSongHundreds, cdSong = _getTrackNumber()
-  print "here.."
+  print "here..2"
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', cdSongHundreds, cdSong])
   
 # Start playing, turn on display writing
