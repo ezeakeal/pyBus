@@ -79,7 +79,7 @@ TICK = 0.5 # sleep interval in seconds used between iBUS reads
 def init(writer):
   logging.info("In empty ticker")
 
-# Manage the packet, meaning traverse the JSON 'DIRECTIVES' object and attempt to determine a suitable function to pass the packet to.
+# Manage the packet
 def manage(packet):
   logging.info("In empty ticker")
 

@@ -54,12 +54,11 @@ DIRECTIVES = {
   },
   '50' : {
     'C8' : {
-      '01'   : 'd_RESET',
+      '01' : 'd_cdPollResponse', # This can happen via RT button or ignition
       '3B40' : 'd_RESET'
     }
   }
 }
-
 
 WRITER = None
 LISTENER = None
@@ -114,7 +113,7 @@ def manage(packet):
   return result
   
 def shutDown():
-  LISTENER.stop()
+  if LISTENER: LISTENER.stop()
   pB_audio.stop()
   pB_audio.quit()
   pB_display.end()
