@@ -76,7 +76,7 @@ def init(writer):
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
   SESSION_DATA["DOOR_LOCKED"] = False
-  SESSION_DATA["FASTSONG_ON"] = False
+  SESSION_DATA["SPEED_SWITCH"] = False
 
   pB_display.immediateText('PyBus Up')
   WRITER.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
