@@ -55,7 +55,7 @@ def configureLogging(numeric_level):
   
 def createParser():
   parser = argparse.ArgumentParser()
-  parser.add_argument('-v', '--verbose', action='count', default=0, help='Increases verbosity of logging. See LOGFILE.')
+  parser.add_argument('-v', '--verbose', action='count', default=0, help='Increases verbosity of logging. See LOGFILE variable.')
   parser.add_argument('device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
   return parser
 
