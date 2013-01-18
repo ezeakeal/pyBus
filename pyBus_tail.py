@@ -59,7 +59,6 @@ def check_file():
     if not line:
         tailed_file.seek(where)
     else:
-        print "File refresh"
         for element in LISTENERS:
             element.write_message(line)
  

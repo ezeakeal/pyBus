@@ -31,7 +31,7 @@ def initialize():
     if os.path.exists(DEVPATH):
       IBUS = ibusFace(DEVPATH)
     else:
-      logging.warning("USB interface not found at (%s). Waiting 2 seconds.", DEVPATH)
+      logging.warning("USB interface not found at (%s). Waiting 1 seconds.", DEVPATH)
       time.sleep(2)
   IBUS.waitClearBus() # Wait for the iBus to clear, then send some initialization signals
   
