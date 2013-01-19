@@ -56,7 +56,8 @@ def addAll():
   PLAYLIST = CLIENT.playlistinfo()
     
 def quit():
-  CLIENT.disconnect()
+  if CLIENT:
+    CLIENT.disconnect()
 
 def play():
   CLIENT.play()
