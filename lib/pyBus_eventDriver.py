@@ -308,9 +308,12 @@ def _getTrackTextQue():
   status = pB_audio.getInfo()
   if ('track' in status):
     trackStatus = status['track']
-    if ('artist' in trackStatus):
-      displayQue.append(status['track']['artist'])
-    if ('title' in trackStatus):
-      displayQue.append(status['track']['title'])
+    if trackStatus:
+      if ('artist' in trackStatus):
+        displayQue.append(status['track']['artist'])
+      if ('title' in trackStatus):
+        displayQue.append(status['track']['title'])
+    else:
+      displayQue.append("Paused")
   return displayQue
 #################################################################
