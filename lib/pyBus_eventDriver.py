@@ -117,8 +117,11 @@ def listen():
     time.sleep(TICK) # sleep a bit
 
 def shutDown():
+  logging.debug("Stopping Audio")
   pB_audio.stop()
+  logging.debug("Quitting Audio Client")
   pB_audio.quit()
+  logging.debug("Stopping Display Driver")
   pB_display.end()
 
 class TriggerRestart(Exception):
