@@ -96,8 +96,6 @@ def seek(delta):
 
 def getTrackInfo():
   global T_STATUS
-  if ('songid' not in CLIENT.status()):
-    return
   currentTID = getTrackID()
   for song in PLAYLIST:
     trackID = song["id"]

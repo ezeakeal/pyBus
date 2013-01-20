@@ -41,10 +41,13 @@ def initialize():
 # close the USB device and whatever else is required
 def shutdown():
   global IBUS
+  logging.info("Shutting down event driver")
   pB_eDriver.shutDown()
+  logging.info("Shutting down tick driver")
   pB_tDriver.shutDown()
   
   if IBUS:
+    logging.info("Killing iBUS instance")
     IBUS.close()
     IBUS = None
 
