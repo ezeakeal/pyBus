@@ -43,6 +43,9 @@ def init():
     repeat(True) # Repeat all tracks
   else:
     logging.critical('Failed to connect to MPD server')
+    logging.critical("Sleeping 1 second and retrying")
+    time.sleep(1)
+    init()
 
 # Updates MPD library
 def update():

@@ -59,6 +59,15 @@ def createParser():
   parser.add_argument('device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
   return parser
 
+def restart():
+  args = sys.argv[:]
+  logging.info('Re-spawning %s' % ' '.join(args))
+
+  args.insert(0, sys.executable)
+
+  os.chdir(_startup_cwd)
+  os.execv(sys.executable, args)
+
 #####################################
 # MAIN
 #####################################
@@ -78,8 +87,8 @@ while True:
   except Exception:
     logging.error("Caught unexpected exception:")
     logging.error(traceback.format_exc())
-    logging.info("Going to sleep 5 seconds and restart")
-    core.shutdown()
-    time.sleep(5)
-
+    logging.info("Going to sleep 2 seconds and restart")
+    time.sleep(2)
+    restart()
+    
 sys.exit(0)
