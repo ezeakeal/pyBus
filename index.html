@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Pybus : iBus interface for my E46 BMW written in Python" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Pybus</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ezeakeal/pyBus">View on GitHub</a>
+
+          <h1 id="project_title">Pybus</h1>
+          <h2 id="project_tagline">iBus interface for my E46 BMW written in Python</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/ezeakeal/pyBus/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/ezeakeal/pyBus/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>pyBus</h1>
+
+<p>iBus interface for my E46 BMW written in Python
+This is to be used with the USB interface which can be acquired from <a href="http://www.reslers.de/IBUS/">Reslers.de</a></p>
+
+<p>The software expects MPD to be working on whatever it is installed on (I use a Raspberry-Pi, if you are interested in doing the same, check out the project page on my blog for a guide! <a href="http://blog.danielvagg.com/blog/?page_id=25">HEAH</a>)</p>
+
+<h2>Overview</h2>
+
+<p>There are 2 main components:<br><strong>pyBus.py</strong> - Interfaces with the iBus to emulate a CD-Changer as well as other devices:</p>
+
+<ul>
+<li>Loads up a music library from a memory stick.</li>
+<li>Emulates a CD changer with appropriate signals and responses</li>
+<li>Plays music over the car speakers</li>
+<li>Can be controlled using radio controls and steering wheel controls as you would expect.</li>
+<li>Displays track info on the standard radio LED display (not the fancy screens)</li>
+</ul><p><strong>pyBus_web.py</strong> - Web-Server which creates a web-page that allows a user to:  </p>
+
+<ul>
+<li>Play/Pause</li>
+<li>Next/Previous</li>
+<li>Modify Playlist</li>
+</ul><h3>Useful links</h3>
+
+<p><a href="http://linux.die.net/man/5/mpd.conf">http://linux.die.net/man/5/mpd.conf</a><br><a href="http://miro.oorganica.com/raspberry-pi-mpd/">http://miro.oorganica.com/raspberry-pi-mpd/</a><br><a href="http://web.comhem.se/bengt-olof.swing/ibusdevicesandoperations.htm">http://web.comhem.se/bengt-olof.swing/ibusdevicesandoperations.htm</a>   </p>
+
+<h3>Warning</h3>
+
+<p>The software is not completely finished, and regardless of its state, I shall not accept liability for any damage done by this software (though it is next to impossible due to the nature of the iBus).</p>
+
+<h3>Architecture/Operation</h3>
+
+<p>I am in the process of illustrating this. At the very least I should let you know there are multiple threads involved in this.</p>
+
+<h2>Pre-Requisites</h2>
+
+<ul>
+<li>python, mpd, python-setuptools, mpc (mpd CLI, useful for testing)
+
+<ul>
+<li><code>apt-get install python python-setuptools mpd mpc</code></li>
+</ul>
+</li>
+<li>
+<strong>Python modules:</strong> termcolor, web.py, python-mpd, pyserial, probably more
+
+<ul>
+<li>
+<code>easy_install termcolor web.py python-mpd pyserial</code>
+## How to use</li>
+</ul>
+</li>
+<li>Install the prerequisites above. There may be more, feel free to leave a comment letting me know which one.</li>
+<li>Ensure music is available at /music and that mpd is configured to read from there (best test mpc using mpc prior). NOTE: I use a little bit of BASh to mount my memory stick to /music on boot up. </li>
+<li><p>There is also a requirement for a folder: (/music/pyBus). Logging will go in this folder, which is useful for debugging away from the RPi.</p></li>
+<li><p>Plug in iBus USB device</p></li>
+<li>
+<p>Run: <code>./pyBus.py &lt;PATH to USB Device&gt;</code></p>
+
+<ul>
+<li>E.g. <code>./pyBus.py /dev/ttyUSB0</code>
+</li>
+</ul>
+</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Pybus maintained by <a href="https://github.com/ezeakeal">ezeakeal</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
