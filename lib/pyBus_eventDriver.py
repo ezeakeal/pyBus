@@ -5,6 +5,7 @@ import threading
 
 import pyBus_module_display as pB_display # Only events can manipulate the display stack
 import pyBus_module_audio as pB_audio # Add the audio module as it will only be manipulated from here in pyBus
+import pyBus_tickUtil as pB_ticker # Ticker for signals requiring intervals
 
 # This module will read a packet, match it against the json object 'DIRECTIVES' below. 
 # The packet is checked by matching the source value in packet (i.e. where the packet came from) to a key in the object if possible
@@ -100,11 +101,14 @@ def manage(packet):
     
   result = None
   if methodName != None:
-    methodToCall = globals()[methodName]
-    logging.debug("Directive found for packet - %s" % methodName)
-    result = methodToCall(packet)
+    methodToCall = globals().get(methodName, None)
+    if methodToCall:
+      logging.debug("Directive found for packet - %s" % methodName)
+      result = methodToCall(packet)
+    else:
+      logging.debug("Method (%s) does not exist" % methodName)
   else:
-    logging.debug("Directive not found for packet")
+    logging.debug("MethodName (%s) does not match a function" % methodName)
 
   return result
   
@@ -175,8 +179,9 @@ def d_cdChange4(packet):
   logging.info("Running Custom 4")
   
 def d_update(packet):
+  # TODO Implement a status updater using the tickUtil
   logging.info("UPDATE")
-  pB_display.immediateText('UPDATE')
+  pB_display.immediateText('UPDATING')
   pB_audio.update()
   pB_audio.addAll()
   
@@ -208,12 +213,18 @@ def d_cdPrev(packet):
 def d_cdScanForward(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  pB_audio.seek(2)
+  if "".join(packet['dat']) == "380700":
+    pB_ticker.enableFunc("scanForward", 0.5)
+  else:
+    pB_ticker.disableFunc("scanForward")
 
 def d_cdScanBackard(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  pB_audio.seek(-2)
+  if "".join(packet['dat']) == "380701":
+    pB_ticker.enableFunc("scanBackward", 0.5)
+  else:
+    pB_ticker.disableFunc("scanBackward")
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):
@@ -236,7 +247,7 @@ def d_cdSendStatus(packet):
 
 # Respond to the Poll for changer alive
 def d_cdPollResponse(packet):
-  WRITER.writeBusPacket('18', 'FF', ['02','00'])
+  pB_ticker.enableFunc("pollResponse", 30)
   
 # Enable/Disable Random
 def d_cdRandom(packet):

@@ -36,7 +36,6 @@ def initialize():
   IBUS.waitClearBus() # Wait for the iBus to clear, then send some initialization signals
   
   pB_eDriver.init(IBUS)
-  pB_tDriver.init(IBUS)
   
 # close the USB device and whatever else is required
 def shutdown():
