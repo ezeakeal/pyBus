@@ -23,7 +23,7 @@ import pyBus_module_audio as pB_audio # Add the audio module as it will only be 
 #####################################
 WRITER = None
 STATE_DATA = {}
-TICK_FUNC = {}
+FUNC_STACK = {}
 TICK = 1 # sleep interval in seconds used between iBUS reads
 TOCK = True
 
