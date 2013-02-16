@@ -74,6 +74,7 @@ def restart():
 parser   = createParser()
 results  = parser.parse_args()
 loglevel = results.verbose
+_startup_cwd = os.getcwd()
 
 signal.signal(signal.SIGINT, signal_handler_quit) # Manage Ctrl+C
 configureLogging(loglevel)
