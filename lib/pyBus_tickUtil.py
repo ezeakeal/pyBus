@@ -60,7 +60,8 @@ def enableFunc(funcName, interval, count=0):
 
 def disableFunc(funcName):
   global FUNC_STACK
-  del FUNC_STACK[funcName]
+  if funcName in FUNC_STACK.keys():
+    del FUNC_STACK[funcName]
 
 #------------------------------------
 # THREAD FOR TICKING AND CHECKING EVENTS
