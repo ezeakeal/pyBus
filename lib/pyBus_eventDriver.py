@@ -74,6 +74,7 @@ def init(writer):
   WRITER = writer
   pB_display.init(WRITER)
   pB_audio.init()
+  pB_ticker.init(WRITER)
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
   SESSION_DATA["DOOR_LOCKED"] = False
