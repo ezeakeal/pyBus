@@ -49,7 +49,7 @@ def enableFunc(funcName, interval, count=0):
   if funcName not in FUNC_STACK.keys():
     kickOff = True
 
-  if locals().get(funcName, None):
+  if getattr(sys.modules[__name__], funcName):
     FUNC_STACK[funcName] = {
       "INTERVAL": interval,
       "COUNT": count
@@ -68,7 +68,7 @@ def disableFunc(funcName):
 def do_every(funcName):
   global FUNC_STACK
   funcSpec = FUNC_STACK.get(funcName)
-  worker_func = locals().get(funcName, None)
+  worker_func = getattr(sys.modules[__name__], funcName)
   if funcSpec and worker_func:
     interval = funcSpec["INTERVAL"]
     count = funcSpec["COUNT"]
