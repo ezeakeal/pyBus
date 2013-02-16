@@ -126,7 +126,7 @@ def shutDown():
   logging.debug("Stopping Display Driver")
   pB_display.end()
   logging.debug("Killing tick utility")
-  pyBus_tickUtil.shutDown()
+  pB_ticker.shutDown()
 
 class TriggerRestart(Exception):
   pass
