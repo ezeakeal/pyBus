@@ -7,14 +7,13 @@ sys.path.append( './lib/' )
 
 # Here we import the two types of drivers. The event driven driver, and the ticking driver.
 import pyBus_eventDriver as pB_eDriver # For responding to signals
-import pyBus_tickDriver as pB_tDriver # For constantly sending a type of signal at a certain interval
 
 from pyBus_interface import *
 #####################################
 # GLOBALS
 #####################################
 DEVPATH           = "/dev/ttyUSB0" # This is a default, but its always overridden. So not really a default.
-LOGFILE           = "/music/pyBus/pybus.log" # The logfile. Other logs are compressed and archived. Use zcat to get their content.
+LOGFILE           = "/var/log/pyBus/pybus.log" # The logfile. Other logs are compressed and archived. Use zcat to get their content.
 IBUS              = None
 REGISTERED        = False # This is a temporary measure until state driven behaviour is implemented
 
@@ -42,8 +41,6 @@ def shutdown():
   global IBUS
   logging.info("Shutting down event driver")
   pB_eDriver.shutDown()
-  logging.info("Shutting down tick driver")
-  pB_tDriver.shutDown()
   
   if IBUS:
     logging.info("Killing iBUS instance")
