@@ -253,7 +253,7 @@ def d_cdSendStatus(packet):
 # Respond to the Poll for changer alive
 def d_cdPollResponse(packet):
   pB_ticker.disableFunc("pollResponse")
-  pB_ticker.enableFunc("pollResponse", 30, kickOff=True)
+  pB_ticker.enableFunc("pollResponse", 30)
   
 # Enable/Disable Random
 def d_cdRandom(packet):
