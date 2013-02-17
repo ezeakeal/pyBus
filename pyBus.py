@@ -4,6 +4,11 @@ import os, sys, time, signal, traceback, logging, argparse, gzip
 import pyBus_core as core
 
 #####################################
+# GLOBALS
+#####################################
+AUTO_RESTART = False
+
+#####################################
 # FUNCTIONS
 #####################################
 # Manage Ctrl+C gracefully
@@ -90,6 +95,9 @@ while True:
     logging.error(traceback.format_exc())
     logging.info("Going to sleep 2 seconds and restart")
     time.sleep(2)
-    restart()
+    if AUTO_RESTART:
+      restart()
+    else:
+      logging.critical("Dying")
     
 sys.exit(0)
