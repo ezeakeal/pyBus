@@ -90,7 +90,7 @@ def do_every(funcName):
     count = funcSpec["COUNT"]
     if count != 1:
       FUNC_STACK[funcName]["COUNT"] = count - 1
-      FUNC_STACK["THREAD"].start()
+      FUNC_STACK[funcName]["THREAD"].start()
     worker_func()
 #------------------------------------
 
