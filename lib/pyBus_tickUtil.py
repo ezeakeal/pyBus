@@ -58,7 +58,7 @@ def enableFunc(funcName, interval, count=0):
         do_every, [funcName]
       )
     }
-    logging.debug("Enabling New Thread:\n%s" % json.dumps(FUNC_STACK[funcName], indent=2))
+    logging.debug("Enabling New Thread:\n%s" % FUNC_STACK[funcName])
     do_every(funcName) # Begins loop of function calls, each one occurring as close to the interval as possible.
   else:
     logging.warning("No function found (%s)" % funcName)
