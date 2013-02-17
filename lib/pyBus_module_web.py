@@ -8,7 +8,11 @@ def enum(**enums):
 currentTrackID = -1
 
 urls = (
-  '/', 'index',
+  '/', 'dashboard',
+  '/media', 'media',
+  '/admin', 'admin',
+  '/system', 'system',
+  
   '/update', 'update',
   '/getLibrary', 'getLibrary',
   '/getPlaylist', 'getPlaylist',
@@ -39,10 +43,23 @@ def getCustomData():
 #########################
 # Web stuff
 #########################  
-class index:
+class dashboard:
+  def GET(self):
+    return render.dashboard()
+
+class media:
   def GET(self):
     pB_audio.init()
-    return render.index()
+    return render.media()
+
+class admin:
+  def GET(self):
+    return render.admin()
+
+class system:
+  def GET(self):
+    pB_audio.init()
+    return render.system()
 
 class musicStatus:
   def GET(self):

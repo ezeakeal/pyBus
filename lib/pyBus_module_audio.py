@@ -36,7 +36,7 @@ def init():
   CLIENT = MPDClient()
   if mpdConnect(CLIENT, CON_ID):
     logging.info('Connected to MPD server')
-    CLIENT.setvol(100)
+    #CLIENT.setvol(100)
     PLAYLIST = CLIENT.playlistinfo()
     LIBRARY  = CLIENT.listallinfo()
     

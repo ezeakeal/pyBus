@@ -44,42 +44,54 @@ def shutDown():
 def enableFunc(funcName, interval, count=0):
   global FUNC_STACK
 
-  # Prevent the function getting called at slightly different times and flooding the bus. Make sure its not already qeued. If so, just update the spec.
-  kickOff = False
-  if funcName not in FUNC_STACK.keys():
-    kickOff = True
+  # Cancel Thread if it already exists.
+  if FUNC_STACK.get(funcName) and FUNC_STACK.get(funcName).get("THREAD"):
+    FUNC_STACK[funcName]["THREAD"].cancel()
 
+  # Dont worry about checking if a function is already enabled, as the thread would have died. Rather than updating the spec, just run a new thread.
   if getattr(sys.modules[__name__], funcName):
+    UUID = os.urandom(32) # this is a fantastic idea if I do say so myself!
     FUNC_STACK[funcName] = {
-      "INTERVAL": interval,
-      "COUNT": count
+      "COUNT": count,
+      "THREAD": threading.Timer(
+        interval,
+        do_every, [funcName]
+      )
     }
-    if kickOff: do_every(funcName) # Begins loop of function calls, each one occurring as close to the interval as possible.
+    do_every(funcName) # Begins loop of function calls, each one occurring as close to the interval as possible.
   else:
     logging.warning("No function found (%s)" % funcName)
+
+  if trigger:
+    getattr(sys.modules[__name__], funcName)() # invoke the function immediately if required
 
 def disableFunc(funcName):
   global FUNC_STACK
   if funcName in FUNC_STACK.keys():
+    thread = FUNC_STACK[funcName].get("THREAD")
+    if thread: thread.cancel()
     del FUNC_STACK[funcName]
+
+def disableAllFunc():
+  global FUNC_STACK
+  for func in FUNC_STACK:
+    thread = func.get("THREAD")
+    if thread: thread.cancel()
+  FUNC_STACK = {}
 
 #------------------------------------
 # THREAD FOR TICKING AND CHECKING EVENTS
 #------------------------------------
 def do_every(funcName):
   global FUNC_STACK
-  funcSpec = FUNC_STACK.get(funcName)
+  funcSpec = FUNC_STACK.get(funcName, None)
   worker_func = getattr(sys.modules[__name__], funcName)
   if funcSpec and worker_func:
-    interval = funcSpec["INTERVAL"]
     count = funcSpec["COUNT"]
     if count != 1:
       FUNC_STACK[funcName]["COUNT"] = count - 1
-      threading.Timer(
-        interval,
-        do_every, [funcName]
-      ).start();
-    worker_func();
+      FUNC_STACK["THREAD"].start()
+    worker_func()
 #------------------------------------
 
 #####################################

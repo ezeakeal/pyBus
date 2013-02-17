@@ -214,20 +214,21 @@ def d_cdPrev(packet):
   _displayTrackInfo()
 
 def d_cdScanForward(packet):
+  #2013/02/17T05:30:55 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '04', '01'], '48']
+  #2013/02/17T05:30:55 [DEBUG in pyBus_eventDriver] Directive found for packet - d_cdScanForward
+  #2013/02/17T05:30:55 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '03', '00'], '4E']
+  #2013/02/17T05:30:55 [DEBUG in pyBus_eventDriver] Directive found for packet - d_cdStartPlaying
+
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  if "".join(packet['dat']) == "380700":
+  if "".join(packet['dat']) == "380401":
     pB_ticker.enableFunc("scanForward", 0.5)
-  else:
-    pB_ticker.disableFunc("scanForward")
 
 def d_cdScanBackard(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  if "".join(packet['dat']) == "380701":
+  if "".join(packet['dat']) == "380400":
     pB_ticker.enableFunc("scanBackward", 0.5)
-  else:
-    pB_ticker.disableFunc("scanBackward")
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):
@@ -240,6 +241,7 @@ def d_cdStopPlaying(packet):
 def d_cdStartPlaying(packet):
   pB_audio.play()
   pB_display.setDisplay(True)
+  pB_ticker.disableAllFunc()
   writeCurrentTrack()
   _displayTrackInfo()
 
@@ -251,7 +253,7 @@ def d_cdSendStatus(packet):
 # Respond to the Poll for changer alive
 def d_cdPollResponse(packet):
   pB_ticker.disableFunc("pollResponse")
-  pB_ticker.enableFunc("pollResponse", 30)
+  pB_ticker.enableFunc("pollResponse", 30, kickOff=True)
   
 # Enable/Disable Random
 def d_cdRandom(packet):
