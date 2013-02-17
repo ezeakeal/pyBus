@@ -13,7 +13,6 @@ from pyBus_interface import *
 # GLOBALS
 #####################################
 DEVPATH           = "/dev/ttyUSB0" # This is a default, but its always overridden. So not really a default.
-LOGFILE           = "/var/log/pyBus/pybus.log" # The logfile. Other logs are compressed and archived. Use zcat to get their content.
 IBUS              = None
 REGISTERED        = False # This is a temporary measure until state driven behaviour is implemented
 

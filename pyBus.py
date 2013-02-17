@@ -22,37 +22,14 @@ def print_usage():
   print "Intended Use:"
   print "%s <PATH_TO_DEVICE>" % (sys.argv[0])
   print "Eg: %s /dev/ttyUSB0" % (sys.argv[0])
-
-def compress_old_truncate():
-  logfile = core.LOGFILE
-  compressed_filename = logfile + '.gz'
-  num_append = 1
-  while os.path.exists("%s.%s" %(compressed_filename, num_append)):
-    num_append = num_append + 1
-  compressed_filename = "%s.%s" %(compressed_filename, num_append)
-  f_in = open(logfile, 'rw')
-  try:
-    f_out = gzip.open(compressed_filename, 'wb')
-    f_out.writelines(f_in)
-    f_out.close()
-  except:
-    logging.critical("There has been an error archiving log file!")
-  f_in.close()
-  f_in = open(logfile, 'w')
-  f_in.truncate()
-  f_in.close()
   
 #################################
 # Configure Logging for pySel
 #################################
 def configureLogging(numeric_level):
-  logfile = core.LOGFILE
-  if os.path.exists(logfile):
-    compress_old_truncate()
   if not isinstance(numeric_level, int):
     numeric_level=0
   logging.basicConfig(
-    filename=logfile, 
     level=numeric_level,
     format='%(asctime)s [%(levelname)s in %(module)s] %(message)s', 
     datefmt='%Y/%m/%dT%I:%M:%S'
@@ -60,7 +37,7 @@ def configureLogging(numeric_level):
   
 def createParser():
   parser = argparse.ArgumentParser()
-  parser.add_argument('-v', '--verbose', action='count', default=0, help='Increases verbosity of logging. See LOGFILE variable.')
+  parser.add_argument('-v', '--verbose', action='count', default=0, help='Increases verbosity of logging.')
   parser.add_argument('device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
   return parser
 
