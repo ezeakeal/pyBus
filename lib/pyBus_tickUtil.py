@@ -58,12 +58,10 @@ def enableFunc(funcName, interval, count=0):
         do_every, [funcName]
       )
     }
+    logging.debug("Enabling New Thread:\n%s" % json.dumps(FUNC_STACK[funcName], indent=2))
     do_every(funcName) # Begins loop of function calls, each one occurring as close to the interval as possible.
   else:
     logging.warning("No function found (%s)" % funcName)
-
-  if trigger:
-    getattr(sys.modules[__name__], funcName)() # invoke the function immediately if required
 
 def disableFunc(funcName):
   global FUNC_STACK
@@ -74,8 +72,8 @@ def disableFunc(funcName):
 
 def disableAllFunc():
   global FUNC_STACK
-  for func in FUNC_STACK:
-    thread = func.get("THREAD")
+  for funcName in FUNC_STACK:
+    thread = FUNC_STACK[funcName].get("THREAD")
     if thread: thread.cancel()
   FUNC_STACK = {}
 
