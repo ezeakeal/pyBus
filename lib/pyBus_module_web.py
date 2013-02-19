@@ -1,11 +1,14 @@
 import web, os, sys, subprocess, commands, mimetypes, re
 import json as JSON
 import pyBus_module_audio as pB_audio
+import xmlrpclib
 
 def enum(**enums):
   return type('Enum', (), enums)
 
 currentTrackID = -1
+supserver = xmlrpclib.Server('http://localhost:9001/RPC2')
+# http://supervisord.org/api.html
 
 urls = (
   '/', 'dashboard',
@@ -13,6 +16,13 @@ urls = (
   '/admin', 'admin',
   '/system', 'system',
   
+  '/supervisor/getSupStatus', 'getSupStatus',
+  '/supervisor/getProcStatus', 'getProcStatus',
+  '/supervisor/stopSupProc', 'stopSupProc',
+  '/supervisor/startSupProc', 'startSupProc',
+  '/supervisor/tailSupProc', 'tailSupProc',
+  '/supervisor/clearProcLog', 'clearProcLog',
+
   '/update', 'update',
   '/getLibrary', 'getLibrary',
   '/getPlaylist', 'getPlaylist',
@@ -39,6 +49,43 @@ def getCustomData():
       print "Error loading custom data file"
       print e
   return(status)
+
+
+#########################
+# Supervisor stuff
+#########################  
+class getSupStatus:
+  def GET(self):
+    return JSON.dumps(supserver.supervisor.getState())
+
+class getProcStatus:
+  def GET(self):
+    return JSON.dumps(supserver.supervisor.getAllProcessInfo())
+
+class stopSupProc:
+  def GET(self):
+    getData = web.input(_method='get')
+    procName = getData.get('proc')
+    return JSON.dumps(supserver.supervisor.stopProcessGroup(procName))
+  
+class startSupProc:
+  def GET(self):
+    getData = web.input(_method='get')
+    procName = getData.get('proc')
+    return JSON.dumps(supserver.supervisor.startProcessGroup(procName))
+
+class tailSupProc:
+  def GET(self):
+    getData = web.input(_method='get')
+    procName = getData.get('proc')
+    offset = getData.get('offset')
+    return JSON.dumps(supserver.supervisor.tailProcessStdoutLog(procName, offset, 10240))
+  
+class clearProcLog:
+  def GET(self):
+    getData = web.input(_method='get')
+    procName = getData.get('proc')
+    return JSON.dumps(supserver.supervisor.clearProcessLogs(procName))
 
 #########################
 # Web stuff

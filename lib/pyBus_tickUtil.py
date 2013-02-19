@@ -50,7 +50,6 @@ def enableFunc(funcName, interval, count=0):
 
   # Dont worry about checking if a function is already enabled, as the thread would have died. Rather than updating the spec, just run a new thread.
   if getattr(sys.modules[__name__], funcName):
-    UUID = os.urandom(32) # this is a fantastic idea if I do say so myself!
     FUNC_STACK[funcName] = {
       "COUNT": count,
       "THREAD": threading.Timer(

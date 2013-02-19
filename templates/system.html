@@ -7,7 +7,7 @@
     <script type="text/javascript" src="static/js/jquery.js"></script>
     <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="static/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="static/js/log_control.js" ></script>
+    <script type="text/javascript" src="static/js/system_control.js" ></script>
     <script type="text/javascript" src="static/js/paging.js" ></script>
     <link href="static/css/bootstrap.min_slate.css" rel="stylesheet">
     <link href="static/css/DT_bootstrap.css" rel="stylesheet">
@@ -41,5 +41,32 @@
       </div>
     </div>
     <br><br>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        
+        <div class="span6 well">
+          <h4>Manage</h4>
+          
+          <div id="sys_manage">
+            <div id="sys_manage_supervisor">
+              
+            </div>
+            <div class="well" id="sys_manage_proc">
+              
+            </div>
+          </div>
+        </div>
+
+        <div class="span6 well">
+          <div id="logOutput" class="collapse in">
+            <h4>Log Output:</h4>
+            <pre class="code" id="logOutput_pre" style="max-height:400px; overflow: auto">
+            </pre>
+          </div>
+        </div>
+      </div> <!-- End Row -->
+    </div> <!-- End Container -->
+
   </body>
 </html>
