@@ -268,12 +268,12 @@ def d_cdRandom(packet):
   _displayTrackInfo(False)
    
 def d_subWDown(packet):
-  if (SUB_OUT.getvolume()[0] - 10 > 0):
+  if SUB_OUT and (SUB_OUT.getvolume()[0] - 10 > 0):
     SUB_OUT.setvolume(SUB_OUT.getvolume()[0] - 10)
     pB_display.immediateText("Sub Down (%s)" % SUB_OUT.getvolume()[0])
 
 def d_subWUp(packet):
-  if (SUB_OUT.getvolume()[0] + 10 < 100):
+  if SUB_OUT and (SUB_OUT.getvolume()[0] + 10 < 100):
     SUB_OUT.setvolume(SUB_OUT.getvolume()[0] + 10)
     pB_display.immediateText("Sub Up (%s)" % SUB_OUT.getvolume()[0])
 
