@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
 import os, sys, time, signal, json, logging, traceback
+try:
+  import alsaaudio
+except:
+  logging.warning("Exception importing alsaaudio")
+
 import threading
 
 import pyBus_module_display as pB_display # Only events can manipulate the display stack
@@ -43,8 +48,8 @@ DIRECTIVES = {
       '380701' : 'd_cdScanBackard',
       '380601' : 'd_toggleSS', # 1 pressed
       '380602' : 'd_togglePause', # 2 pressed
-      '380603' : 'd_cdChange3', # 3 pressed
-      '380604' : 'd_cdChange4', # 4 pressed
+      '380603' : 'd_subWDown', # 3 pressed
+      '380604' : 'd_subWUp', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
       '380401' : 'd_cdScanForward',
@@ -64,17 +69,24 @@ DIRECTIVES = {
 WRITER = None
 SESSION_DATA = {}
 TICK = 0.01 # sleep interval in seconds used between iBUS reads
-
+SUB_OUT = None
 #####################################
 # FUNCTIONS
 #####################################
 # Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
-  global WRITER, SESSION_DATA
+  global WRITER, SESSION_DATA, SUB_OUT
   WRITER = writer
+
+  try:
+    SUB_OUT = alsaaudio.Mixer(cardindex=0) # I have output sent to two devices in MPD - HW index 0 is the default sound device, which is plugged in to my sub in the boot.
+  except:
+    logging.warning("Exception opening Sub audio output")
+
   pB_display.init(WRITER)
   pB_audio.init()
   pB_ticker.init(WRITER)
+  
   WRITER.writeBusPacket('18', 'FF', ['02', '01'])
 
   SESSION_DATA["DOOR_LOCKED"] = False
@@ -214,21 +226,17 @@ def d_cdPrev(packet):
   _displayTrackInfo()
 
 def d_cdScanForward(packet):
-  #2013/02/17T05:30:55 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '04', '01'], '48']
-  #2013/02/17T05:30:55 [DEBUG in pyBus_eventDriver] Directive found for packet - d_cdScanForward
-  #2013/02/17T05:30:55 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '03', '00'], '4E']
-  #2013/02/17T05:30:55 [DEBUG in pyBus_eventDriver] Directive found for packet - d_cdStartPlaying
-
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  if "".join(packet['dat']) == "380401":
-    pB_ticker.enableFunc("scanForward", 0.5)
+  if "".join(packet['dat']) == "380400":
+    WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
+    pB_ticker.enableFunc("scanForward", 0.1)
 
 def d_cdScanBackard(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
-  WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong])
-  if "".join(packet['dat']) == "380400":
-    pB_ticker.enableFunc("scanBackward", 0.5)
+  WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
+  if "".join(packet['dat']) == "380401":
+    pB_ticker.enableFunc("scanBackward", 0.1)
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):
@@ -265,6 +273,16 @@ def d_cdRandom(packet):
     pB_display.immediateText('Random: OFF')
   _displayTrackInfo(False)
    
+def d_subWDown(packet):
+  if (SUB_OUT.getvolume()[0] - 10 > 0):
+    SUB_OUT.setvolume(SUB_OUT.getvolume()[0] - 10)
+    displayQue.append("Sub Down (%s)" % SUB_OUT.getvolume()[0])
+
+def d_subWUp(packet):
+  if (SUB_OUT.getvolume()[0] + 10 < 100):
+    SUB_OUT.setvolume(SUB_OUT.getvolume()[0] + 10)
+    displayQue.append("Sub Up (%s)" % SUB_OUT.getvolume()[0])
+
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
   global SESSION_DATA

@@ -46,23 +46,30 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span6 well">
-          <h4>PyBus Status</h4>
-          <hr>
-          I have no idea what to be putting in here.
-        </div>
-        <div class="span6 well">
-          <div class="alert alert-block alert-info">
+          <div class="alert alert-block">
             <h4>Update Media Library
               <a href="#" id="update_action" class="btn btn-large pull-right">Update</a>
             </h4>
             <p>Forces MPD to rescan the current music library</p>
           </div>
-          <div class="alert alert-block alert-info">
+          <div class="alert alert-block">
             <h4>Upload PyBus Package
               <a href="#" id="upload_action" class="btn btn-large pull-right">Upload</a>
             </h4>
             <p>Upload an archive of the latest pyBus code (download from Github)</p>
           </div>
+          <div class="alert alert-block">
+            <h4>Git Pull
+              <a href="#" id="gitpull_action" class="btn btn-large pull-right">Pull</a>
+            </h4>
+            <p>Pull a particular (probably hardcoded) branch of pybus</p>
+          </div>
+        </div>
+        <div class="span6 well">
+          <h4>PyBus Status</h4>
+          <hr>
+          <pre id="admin_status">
+          </pre>s
         </div>
       </div> <!-- End Row -->
     </div> <!-- End Container -->

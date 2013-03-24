@@ -52,11 +52,11 @@ def update():
   logging.info('Updating MPD Library')
   CLIENT.update()
   LIBRARY  = CLIENT.listallinfo()
+  PLAYLIST = CLIENT.playlistinfo()
 
 def addAll():
   CLIENT.clear() # Clear current playlist
   CLIENT.add('/') # Add all songs in library (TEMP)
-  PLAYLIST = CLIENT.playlistinfo()
     
 def quit():
   if CLIENT:

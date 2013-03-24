@@ -95,10 +95,10 @@ def do_every(funcName):
 # Tick Functions
 #####################################
 def scanForward():
-  pB_audio.seek(5)
-
+  pB_audio.seek(2)
+  
 def scanBackward():
-  pB_audio.seek(-5)  
+  pB_audio.seek(-2)  
 
 def pollResponse():
   WRITER.writeBusPacket('18', 'FF', ['02','00'])
