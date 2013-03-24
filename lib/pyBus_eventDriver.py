@@ -244,6 +244,7 @@ def d_cdStopPlaying(packet):
   
 # Start playing, turn on display writing
 def d_cdStartPlaying(packet):
+  pB_audio.pause()
   pB_audio.play()
   pB_display.setDisplay(True)
   pB_ticker.disableAllFunc()
