@@ -96,10 +96,10 @@ def revive(funcName):
 # Tick Functions
 #####################################
 def scanForward():
-  pB_audio.seek(2)
+  pB_audio.seek(10)
   
 def scanBackward():
-  pB_audio.seek(-2)  
+  pB_audio.seek(-10)  
 
 def pollResponse():
   WRITER.writeBusPacket('18', 'FF', ['02','00'])
