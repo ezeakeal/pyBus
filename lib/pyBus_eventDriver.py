@@ -269,14 +269,16 @@ def d_cdRandom(packet):
   _displayTrackInfo(False)
    
 def d_subWDown(packet):
-  if SUB_OUT and (SUB_OUT.getvolume()[0] - 10 > 50): # Exponential shit is happening for me with alsa.. i dunno
-    SUB_OUT.setvolume(SUB_OUT.getvolume()[0] - 10)
-    pB_display.immediateText("Sub Down (%s)" % SUB_OUT.getvolume()[0])
+  if SUB_OUT:
+    setVol = max(SUB_OUT.getvolume()[0] - 10, 50) # 50 is lower limit, as that will be the max in worst scenarios
+    SUB_OUT.setvolume(setVol)
+    pB_display.immediateText("Sub Down (%s)" % setVol)
 
 def d_subWUp(packet):
-  if SUB_OUT and (SUB_OUT.getvolume()[0] + 10 < 100):
-    SUB_OUT.setvolume(SUB_OUT.getvolume()[0] + 10)
-    pB_display.immediateText("Sub Up (%s)" % SUB_OUT.getvolume()[0])
+  if SUB_OUT:
+    setVol = min(SUB_OUT.getvolume()[0] + 10, 100) # 100 is upper limit, as that will be the lower in worst scenarios
+    SUB_OUT.setvolume(setVol)
+    pB_display.immediateText("Sub Up (%s)" % setVol)
 
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
