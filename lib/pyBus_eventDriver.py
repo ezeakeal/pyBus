@@ -220,17 +220,20 @@ def d_cdPrev(packet):
   writeCurrentTrack()
   _displayTrackInfo()
 
+# The following packets are received for start/end scanning
+# 2013/03/24T06:52:22 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '04', '01'], '48']
+# 2013/03/24T06:52:24 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '03', '00'], '4E']
 def d_cdScanForward(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   if "".join(packet['dat']) == "380401":
     WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
-    pB_ticker.enableFunc("scanForward", 0.1)
+    pB_ticker.enableFunc("scanForward", 0.2)
 
 def d_cdScanBackward(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
   if "".join(packet['dat']) == "380400":
-    pB_ticker.enableFunc("scanBackward", 0.1)
+    pB_ticker.enableFunc("scanBackward", 0.2)
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):

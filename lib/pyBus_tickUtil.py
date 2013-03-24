@@ -24,8 +24,6 @@ import pyBus_module_audio as pB_audio # Add the audio module as it will only be 
 WRITER = None
 STATE_DATA = {}
 FUNC_STACK = {}
-TICK = 1 # sleep interval in seconds used between iBUS reads
-TOCK = True
 
 #####################################
 # FUNCTIONS
@@ -47,18 +45,21 @@ def enableFunc(funcName, interval, count=0):
   # Cancel Thread if it already exists.
   if FUNC_STACK.get(funcName) and FUNC_STACK.get(funcName).get("THREAD"):
     FUNC_STACK[funcName]["THREAD"].cancel()
-
+  
   # Dont worry about checking if a function is already enabled, as the thread would have died. Rather than updating the spec, just run a new thread.
   if getattr(sys.modules[__name__], funcName):
     FUNC_STACK[funcName] = {
       "COUNT": count,
+      "INTERVAL": interval,
       "THREAD": threading.Timer(
         interval,
-        do_every, [funcName]
+        revive, [funcName]
       )
     }
     logging.debug("Enabling New Thread:\n%s" % FUNC_STACK[funcName])
-    do_every(funcName) # Begins loop of function calls, each one occurring as close to the interval as possible.
+    worker_func = getattr(sys.modules[__name__], funcName)
+    worker_func()
+    FUNC_STACK[funcName]["THREAD"].start()
   else:
     logging.warning("No function found (%s)" % funcName)
 
@@ -78,17 +79,17 @@ def disableAllFunc():
 
 #------------------------------------
 # THREAD FOR TICKING AND CHECKING EVENTS
+# Calls itself again
 #------------------------------------
-def do_every(funcName):
+def revive(funcName):
   global FUNC_STACK
   funcSpec = FUNC_STACK.get(funcName, None)
-  worker_func = getattr(sys.modules[__name__], funcName)
-  if funcSpec and worker_func:
+  if funcSpec:
     count = funcSpec["COUNT"]
     if count != 1:
       FUNC_STACK[funcName]["COUNT"] = count - 1
-      FUNC_STACK[funcName]["THREAD"].start()
-    worker_func()
+      funcSpec["THREAD"].cancel() # Kill off this thread just in case..
+      enableFunc(funcName, funcSpec["INTERVAL"]) # REVIVE!
 #------------------------------------
 
 #####################################
