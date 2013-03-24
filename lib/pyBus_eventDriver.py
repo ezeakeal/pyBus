@@ -52,8 +52,8 @@ DIRECTIVES = {
       '380604' : 'd_subWUp', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
-      '380401' : 'd_cdScanForward',
-      '380400' : 'd_cdScanBackard',
+      '380400' : 'd_cdScanForward',
+      '380401' : 'd_cdScanBackward',
       '380800' : 'd_cdRandom',
       '380801' : 'd_cdRandom'
     }
@@ -222,12 +222,11 @@ def d_cdPrev(packet):
 
 def d_cdScanForward(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
-  WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong])
   if "".join(packet['dat']) == "380400":
     WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
     pB_ticker.enableFunc("scanForward", 0.1)
 
-def d_cdScanBackard(packet):
+def d_cdScanBackward(packet):
   cdSongHundreds, cdSong = _getTrackNumber()
   WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
   if "".join(packet['dat']) == "380401":
