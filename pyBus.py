@@ -63,18 +63,18 @@ configureLogging(loglevel)
 
 devPath = sys.argv[1]
 core.DEVPATH=devPath
-while True:
-  try:
-    core.initialize()
-    core.run()
-  except Exception:
-    logging.error("Caught unexpected exception:")
-    logging.error(traceback.format_exc())
-    logging.info("Going to sleep 2 seconds and restart")
-    time.sleep(2)
-    if AUTO_RESTART:
-      restart()
-    else:
-      logging.critical("Dying")
+
+try:
+  core.initialize()
+  core.run()
+except Exception:
+  logging.error("Caught unexpected exception:")
+  logging.error(traceback.format_exc())
+  logging.info("Going to sleep 2 seconds and restart")
+  time.sleep(2)
+  if AUTO_RESTART:
+    restart()
+  else:
+    logging.critical("Dying")
     
 sys.exit(0)
