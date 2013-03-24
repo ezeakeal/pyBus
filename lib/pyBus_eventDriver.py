@@ -186,12 +186,6 @@ def d_togglePause(packet):
   else:
     pB_display.immediateText('Pause')
     pB_audio.pause()
-
-def d_cdChange3(packet):
-  logging.info("Running Custom 3")
-  
-def d_cdChange4(packet):
-  logging.info("Running Custom 4")
   
 def d_update(packet):
   # TODO Implement a status updater using the tickUtil
@@ -276,12 +270,12 @@ def d_cdRandom(packet):
 def d_subWDown(packet):
   if (SUB_OUT.getvolume()[0] - 10 > 0):
     SUB_OUT.setvolume(SUB_OUT.getvolume()[0] - 10)
-    displayQue.append("Sub Down (%s)" % SUB_OUT.getvolume()[0])
+    pB_display.immediateText("Sub Down (%s)" % SUB_OUT.getvolume()[0])
 
 def d_subWUp(packet):
   if (SUB_OUT.getvolume()[0] + 10 < 100):
     SUB_OUT.setvolume(SUB_OUT.getvolume()[0] + 10)
-    displayQue.append("Sub Up (%s)" % SUB_OUT.getvolume()[0])
+    pB_display.immediateText("Sub Up (%s)" % SUB_OUT.getvolume()[0])
 
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
