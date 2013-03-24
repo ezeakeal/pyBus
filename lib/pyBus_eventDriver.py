@@ -79,9 +79,10 @@ def init(writer):
   WRITER = writer
 
   try:
-    SUB_OUT = alsaaudio.Mixer(cardindex=0) # I have output sent to two devices in MPD - HW index 0 is the default sound device, which is plugged in to my sub in the boot.
-  except:
+    SUB_OUT = alsaaudio.Mixer("PCM") # I have output sent to two devices in MPD - HW index 0 is the default sound device, which is plugged in to my sub in the boot.
+  except Exception, e:
     logging.warning("Exception opening Sub audio output")
+    print e
 
   pB_display.init(WRITER)
   pB_audio.init()
@@ -268,7 +269,7 @@ def d_cdRandom(packet):
   _displayTrackInfo(False)
    
 def d_subWDown(packet):
-  if SUB_OUT and (SUB_OUT.getvolume()[0] - 10 > 0):
+  if SUB_OUT and (SUB_OUT.getvolume()[0] - 10 > 50): # Exponential shit is happening for me with alsa.. i dunno
     SUB_OUT.setvolume(SUB_OUT.getvolume()[0] - 10)
     pB_display.immediateText("Sub Down (%s)" % SUB_OUT.getvolume()[0])
 
