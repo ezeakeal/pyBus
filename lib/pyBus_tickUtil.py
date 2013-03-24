@@ -103,3 +103,6 @@ def scanBackward():
 
 def pollResponse():
   WRITER.writeBusPacket('18', 'FF', ['02','00'])
+
+def announce():
+  WRITER.writeBusPacket('18', 'FF', ['02', '01'])

@@ -93,9 +93,12 @@ def random(random, toggle=False):
   return random
 
 def seek(delta):
-  seekDest = int(float(CLIENT.status()['elapsed']) + delta)
-  playListID = int(CLIENT.status()['song'])
-  CLIENT.seek(playListID, seekDest)
+  try:
+    seekDest = int(float(CLIENT.status()['elapsed']) + delta)
+    playListID = int(CLIENT.status()['song'])
+    CLIENT.seek(playListID, seekDest)
+  except Exception, e:
+    logging.warning("Issue seeking - elapsed key missing")
 
 def getTrackInfo():
   global T_STATUS

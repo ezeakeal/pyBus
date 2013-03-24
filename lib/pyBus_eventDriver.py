@@ -88,7 +88,7 @@ def init(writer):
   pB_audio.init()
   pB_ticker.init(WRITER)
   
-  WRITER.writeBusPacket('18', 'FF', ['02', '01'])
+  pB_ticker.enableFunc("announce", 10)
 
   SESSION_DATA["DOOR_LOCKED"] = False
   SESSION_DATA["SPEED_SWITCH"] = False
@@ -258,6 +258,7 @@ def d_cdSendStatus(packet):
 
 # Respond to the Poll for changer alive
 def d_cdPollResponse(packet):
+  pB_ticker.disableFunc("announce") # stop announcing
   pB_ticker.disableFunc("pollResponse")
   pB_ticker.enableFunc("pollResponse", 30)
   
