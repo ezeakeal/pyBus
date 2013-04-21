@@ -159,11 +159,6 @@ class TriggerInit(Exception):
 ############################################################################
 def d_keyOut(packet):
   global SESSION_DATA
-  
-  if SESSION_DATA['DOOR_LOCKED']:
-    SESSION_DATA['DOOR_LOCKED'] = False
-    WRITER.writeBusPacket('3F', '00', ['0C', '03', '01']) # Unlock the door
-
   WRITER.writeBusPacket('3F','00', ['0C', '53', '01']) # Put up window 1
   WRITER.writeBusPacket('3F','00', ['0C', '42', '01']) # Put up window 2
   WRITER.writeBusPacket('3F','00', ['0C', '55', '01']) # Put up window 3
@@ -297,11 +292,6 @@ def speedTrigger(speed):
     except:
       logging.warning("Exception in speed trigger")
       
-  if (speed > 5):
-    if not SESSION_DATA['DOOR_LOCKED']:
-      SESSION_DATA['DOOR_LOCKED'] = True
-      WRITER.writeBusPacket('3F', '00', ['0C', '34', '01'])
-
 ################## DIRECTIVE UTILITY FUNCTIONS ##################
 # Write current track to display 
 def writeCurrentTrack():
