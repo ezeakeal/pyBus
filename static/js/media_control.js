@@ -140,36 +140,38 @@ $(document).ready(function() {
     });
   }
 
-  function renderLibrary(library, completed_callback){
-    var i_Key = 0;
-    var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
-      var song = library[i_Key];
+  function renderLibrary(tableHTML, completed_callback){
+    // var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
+    //   var song = library[i_Key];
       
-      addSongToLibraryTable(song);
+    //   addSongToLibraryTable(song);
 
-      i_Key++; 
-      if( i_Key >= library.length){
-      //if( i_Key >= 15){
-        clearInterval(interval);
-        completed_callback();
-      }
-    }, 10);
+    //   i_Key++; 
+    //   if( i_Key >= library.length){
+    //   //if( i_Key >= 15){
+    //     clearInterval(interval);
+    //     completed_callback();
+    //   }
+    // }, 10);
+    tableBody.html(tableHTML)
+    completed_callback();
   }
 
-  function renderPlaylist(library, completed_callback){
-    var i_Key = 0;
-    var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
-      var song = library[i_Key];
+  function renderPlaylist(tableHTML, completed_callback){
+    // var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
+    //   var song = library[i_Key];
       
-      addSongToPlaylistTable(song);
+    //   addSongToPlaylistTable(song);
 
-      i_Key++; 
-      if( i_Key >= library.length){
-      //if( i_Key >= 15){
-        clearInterval(interval);
-        completed_callback();
-      }
-    }, 10);
+    //   i_Key++; 
+    //   if( i_Key >= library.length){
+    //   //if( i_Key >= 15){
+    //     clearInterval(interval);
+    //     completed_callback();
+    //   }
+    // }, 10);
+    tableBody.html(tableHTML)
+    completed_callback();
   }
 
   window.enableTabs=function(){
@@ -217,9 +219,8 @@ $(document).ready(function() {
     $.ajax({
       type: 'GET',
       url: "/getLibrary",
-      success:function(data, textStatus, jqXHR) {
-        var library = JSON.parse(data);
-        renderLibrary(library, function(){
+      success:function(libraryHTML, textStatus, jqXHR) {
+        renderLibrary(libraryHTML, function(){
           $('td[name="mediaLibrary_actionButtons"]').find('button').click(function(){
             var filePath = $(this).parent().attr('filepath');
             var fileAction = $(this).attr('plist_action');
@@ -245,9 +246,8 @@ $(document).ready(function() {
     $.ajax({
       type: 'GET',
       url: "/getPlaylist",
-      success:function(data, textStatus, jqXHR) {
-        var playlist = JSON.parse(data);
-        renderPlaylist(playlist, function(){
+      success:function(playlistHTML, textStatus, jqXHR) {
+        renderPlaylist(playlistHTML, function(){
           $('td[name="playList_actionButtons"]').find('button').click(function(){
             var filePath = $(this).parent().attr('filepath');
             var fileAction = $(this).attr('plist_action');

@@ -120,11 +120,43 @@ class musicStatus:
 class getLibrary:
   def GET(self):
     library = pB_audio.getLibrary()
-    return JSON.dumps(library)
+    htmlBlock = []
+    for song in library:
+      songHTML = """
+      <tr>
+        <td class="sorting_1">%s</td>
+        <td class="">%s</td>
+        <td class="center">%s</td>
+        <td class="center">%s</td>
+        <td class="center btn-group" filepath="%s" name="mediaLibrary_actionButtons">
+          <button plist_action="add" class="btn btn-success"><i class="icon-play icon-white"></i></button>
+          <button plist_action="play" class="btn btn-danger"><i class="icon-remove-sign icon-white"></i></button>
+        </td>
+      </tr>
+      """ % (song.get('artist'), song.get('album'), song.get('genre'), song.get('title'), song.get('file'))
+      htmlBlock.append(songHTML)
+    return "".join(htmlBlock)
 
 class getPlaylist:
   def GET(self):
     playlist = pB_audio.getPlaylist()
+    htmlBlock = []
+    for song in library:
+      songHTML = """
+      <tr>
+        <td class="sorting_1">%s</td>
+        <td class="">%s</td>
+        <td class="center">%s</td>
+        <td class="center">%s</td>
+        <td class="center btn-group" filepath="%s" name="playList_actionButtons">
+          <button plist_action="play" class="btn btn-success"><i class="icon-play icon-white"></i></button>
+          <button plist_action="remove" class="btn btn-danger"><i class="icon-remove-sign icon-white"></i></button>
+        </td>
+      </tr>
+      """ % (song.get('artist'), song.get('album'), song.get('genre'), song.get('title'), song.get('file'))
+      htmlBlock.append(songHTML)
+    return "".join(htmlBlock)
+
     return JSON.dumps(playlist)
 
 class getInfoPath:
