@@ -70,6 +70,8 @@ WRITER = None
 SESSION_DATA = {}
 TICK = 0.01 # sleep interval in seconds used between iBUS reads
 SUB_OUT = None
+AIRPLAY = False
+
 #####################################
 # FUNCTIONS
 #####################################
@@ -174,13 +176,16 @@ def d_toggleSS(packet):
     pB_display.immediateText('SpeedSw: Off')
 
 def d_togglePause(packet):
+  global AIRPLAY
   logging.info("Play/Pause")
   status = pB_audio.getInfo()
   if (status['status']['state'] != "play"):
+    AIRPLAY = False
     pB_display.immediateText('Play')
     pB_audio.play()
   else:
-    pB_display.immediateText('Pause')
+    AIRPLAY = True
+    pB_display.immediateText('Paused')
     pB_audio.pause()
   
 def d_update(packet):
@@ -206,29 +211,33 @@ def d_custom_IKE(packet):
 
 # NEXT command is invoked from the Radio. 
 def d_cdNext(packet):
-  pB_audio.next()
-  writeCurrentTrack()
-  _displayTrackInfo()
+  if not AIRPLAY:
+    pB_audio.next()
+    writeCurrentTrack()
+    _displayTrackInfo()
 
 def d_cdPrev(packet):
-  pB_audio.previous()
-  writeCurrentTrack()
-  _displayTrackInfo()
+  if not AIRPLAY:
+    pB_audio.previous()
+    writeCurrentTrack()
+    _displayTrackInfo()
 
 # The following packets are received for start/end scanning
 # 2013/03/24T06:52:22 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '04', '01'], '48']
 # 2013/03/24T06:52:24 [DEBUG in pyBus_interface] READ: ['68', '05', '18', ['38', '03', '00'], '4E']
 def d_cdScanForward(packet):
-  cdSongHundreds, cdSong = _getTrackNumber()
-  if "".join(packet['dat']) == "380401":
-    WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
-    pB_ticker.enableFunc("scanForward", 0.2)
+  if not AIRPLAY:
+    cdSongHundreds, cdSong = _getTrackNumber()
+    if "".join(packet['dat']) == "380401":
+      WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
+      pB_ticker.enableFunc("scanForward", 0.2)
 
 def d_cdScanBackward(packet):
-  cdSongHundreds, cdSong = _getTrackNumber()
-  WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
-  if "".join(packet['dat']) == "380400":
-    pB_ticker.enableFunc("scanBackward", 0.2)
+  if not AIRPLAY:
+    cdSongHundreds, cdSong = _getTrackNumber()
+    WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
+    if "".join(packet['dat']) == "380400":
+      pB_ticker.enableFunc("scanBackward", 0.2)
 
 # Stop playing, turn off display writing
 def d_cdStopPlaying(packet):
