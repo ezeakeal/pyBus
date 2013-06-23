@@ -66,67 +66,6 @@ $(document).ready(function() {
   }
 
 
-  function addSongToLibraryTable(song){
-    tableBody = $('#mediaList').find('tbody');
-    songData = Object.keys(song);
-
-    songFields = [
-      "artist", "genre", "title", "file"
-    ]
-    for (var i = 0; i < songFields.length; i++){
-      field = songFields[i];
-      if (songData.indexOf(field) == -1){
-        return false;
-      }
-    }
-
-    insertHTML=[
-      '<tr>',
-      '<td class="sorting_1">'+song['artist']+'</td>',
-      '<td class="">'+song['album']+'</td>',
-      '<td class="center">'+song['genre']+'</td>',
-      '<td class="center">'+song['title']+'</td>',
-      '<td class="center btn-group" filepath="'+song['file']+'" name="mediaLibrary_actionButtons">',
-        '<button plist_action="add" class="btn btn-info"><i class="icon-plus-sign icon-white"></i></button>',
-        '<button plist_action="play" class="btn btn-success"><i class="icon-play icon-white"></i></button>',
-      '</td>',
-      '</tr>'
-    ].join(' ');
-
-    tableBody.append(insertHTML);
-  }
-  function addSongToPlaylistTable(song){
-    if (song){
-      tableBody = $('#playList').find('tbody');
-      songData = Object.keys(song);
-
-      songFields = [
-        "artist", "genre", "title", "file"
-      ]
-      for (var i = 0; i < songFields.length; i++){
-        field = songFields[i];
-        if (songData.indexOf(field) == -1){
-          return false;
-        }
-      }
-
-      insertHTML=[
-        '<tr>',
-        '<td class="sorting_1">'+song['artist']+'</td>',
-        '<td class="">'+song['album']+'</td>',
-        '<td class="center">'+song['genre']+'</td>',
-        '<td class="center">'+song['title']+'</td>',
-        '<td class="center btn-group" filepath="'+song['file']+'" name="playList_actionButtons">',
-          '<button plist_action="play" class="btn btn-success"><i class="icon-play icon-white"></i></button>',
-          '<button plist_action="remove" class="btn btn-danger"><i class="icon-remove-sign icon-white"></i></button>',
-        '</td>',
-        '</tr>'
-      ].join(' ');
-
-      tableBody.append(insertHTML);
-    }
-  }
-
   function modLibary(filepath, type){
     var getData = {
       "type" : type,
@@ -141,36 +80,12 @@ $(document).ready(function() {
   }
 
   function renderLibrary(tableHTML, completed_callback){
-    // var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
-    //   var song = library[i_Key];
-      
-    //   addSongToLibraryTable(song);
-
-    //   i_Key++; 
-    //   if( i_Key >= library.length){
-    //   //if( i_Key >= 15){
-    //     clearInterval(interval);
-    //     completed_callback();
-    //   }
-    // }, 10);
     tableBody = $('#mediaList').find('tbody');
     tableBody.html(tableHTML)
     completed_callback();
   }
 
   function renderPlaylist(tableHTML, completed_callback){
-    // var interval = setInterval( function() { // Generate table in sections. Use setInterval to allow browser time to render
-    //   var song = library[i_Key];
-      
-    //   addSongToPlaylistTable(song);
-
-    //   i_Key++; 
-    //   if( i_Key >= library.length){
-    //   //if( i_Key >= 15){
-    //     clearInterval(interval);
-    //     completed_callback();
-    //   }
-    // }, 10);
     tableBody = $('#playList').find('tbody');
     tableBody.html(tableHTML)
     completed_callback();
@@ -215,7 +130,6 @@ $(document).ready(function() {
     var rowInd = playlist.fnGetPosition(select);    
     playlist.fnDeleteRow( rowInd );
   }
-
 
   window.renderLibraryTable=function(){
     $.ajax({
