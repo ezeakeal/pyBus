@@ -141,7 +141,7 @@ class getPlaylist:
   def GET(self):
     playlist = pB_audio.getPlaylist()
     htmlBlock = []
-    for song in library:
+    for song in playlist:
       songHTML = """
       <tr>
         <td class="sorting_1">%s</td>
@@ -156,8 +156,6 @@ class getPlaylist:
       """ % (song.get('artist'), song.get('album'), song.get('genre'), song.get('title'), song.get('file'))
       htmlBlock.append(songHTML)
     return "".join(htmlBlock)
-
-    return JSON.dumps(playlist)
 
 class getInfoPath:
   def GET(self):
