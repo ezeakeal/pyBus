@@ -153,6 +153,7 @@ $(document).ready(function() {
     //     completed_callback();
     //   }
     // }, 10);
+    tableBody = $('#mediaList').find('tbody');
     tableBody.html(tableHTML)
     completed_callback();
   }
@@ -170,6 +171,7 @@ $(document).ready(function() {
     //     completed_callback();
     //   }
     // }, 10);
+    tableBody = $('#playList').find('tbody');
     tableBody.html(tableHTML)
     completed_callback();
   }
