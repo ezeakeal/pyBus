@@ -1,6 +1,13 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, traceback, logging, argparse, gzip
+import os
+import sys
+import time
+import signal
+import traceback
+import logging
+import argparse
+import gzip
 import pyBus_core as core
 
 #####################################
@@ -38,7 +45,7 @@ def configureLogging(numeric_level):
 def createParser():
   parser = argparse.ArgumentParser()
   parser.add_argument('-v', '--verbose', action='count', default=0, help='Increases verbosity of logging.')
-  parser.add_argument('device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
+  parser.add_argument('--device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
   return parser
 
 def restart():
@@ -62,7 +69,8 @@ signal.signal(signal.SIGINT, signal_handler_quit) # Manage Ctrl+C
 configureLogging(loglevel)
 
 devPath = sys.argv[1]
-core.DEVPATH=devPath
+core.DEVPATH = devPath if devPath else "/dev/ttyUSB0"
+
 
 try:
   core.initialize()
