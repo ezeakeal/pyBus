@@ -276,6 +276,7 @@ def d_cdRandom(packet):
   _displayTrackInfo(False)
    
 def d_bigSoftie(packet):
+  logging.info("Attempting softie switch")
   pB_display.immediateText('<3 Laura <3')
   pb_audio.playSong("Barry White/Barry White - John Cage Theme - Ally McBeal.mp3")
   pb_audio.seek(50)
