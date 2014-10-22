@@ -278,8 +278,8 @@ def d_cdRandom(packet):
 def d_bigSoftie(packet):
   logging.info("Attempting softie switch")
   pB_display.immediateText('<3 Laura <3')
-  pb_audio.playSong("Barry White/Barry White - John Cage Theme - Ally McBeal.mp3")
-  pb_audio.seek(50)
+  pB_audio.playSong("Barry White/Barry White - John Cage Theme - Ally McBeal.mp3")
+  pB_audio.seek(50)
 
 def d_subWUp(packet):
   if SUB_OUT:
