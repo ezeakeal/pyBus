@@ -68,7 +68,7 @@ _startup_cwd = os.getcwd()
 signal.signal(signal.SIGINT, signal_handler_quit) # Manage Ctrl+C
 configureLogging(loglevel)
 
-devPath = sys.argv[1]
+devPath = sys.argv[1] if (len(sys.argv) > 1) else "/dev/ttyUSB0"
 core.DEVPATH = devPath if devPath else "/dev/ttyUSB0"
 
 

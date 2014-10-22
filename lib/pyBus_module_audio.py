@@ -109,6 +109,7 @@ def getTrackInfo():
       T_STATUS = song
 
 def getInfo(lastID=-1):
+  global CLIENT
   if CLIENT == None:
     init()
   state = None
@@ -118,6 +119,7 @@ def getInfo(lastID=-1):
     except Exception, e:
       logging.warning("MPD lost connection while reading status")
       time.sleep(.5)
+      CLIENT == None
     
   if (state['state'] != "stop"):
     if ("songid" in state):
