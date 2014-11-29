@@ -48,7 +48,7 @@ DIRECTIVES = {
       '380701' : 'd_cdScanBackard',
       '380601' : 'd_toggleSS', # 1 pressed
       '380602' : 'd_togglePause', # 2 pressed
-      '380603' : 'd_subWDown', # 3 pressed
+      '380603' : 'd_bigSoftie', # 3 pressed
       '380604' : 'd_subWUp', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
@@ -168,7 +168,6 @@ def d_keyOut(packet):
   
 def d_toggleSS(packet):
   global SESSION_DATA
-  logging.info("Running Custom 1")
   SESSION_DATA['SPEED_SWITCH'] = not SESSION_DATA['SPEED_SWITCH']
   if SESSION_DATA['SPEED_SWITCH']:
     pB_display.immediateText('SpeedSw: On')
@@ -276,11 +275,12 @@ def d_cdRandom(packet):
     pB_display.immediateText('Random: OFF')
   _displayTrackInfo(False)
    
-def d_subWDown(packet):
-  if SUB_OUT:
-    setVol = max(SUB_OUT.getvolume()[0] - 10, 50) # 50 is lower limit, as that will be the max in worst scenarios
-    SUB_OUT.setvolume(setVol)
-    pB_display.immediateText("Sub Down (%s)" % setVol)
+def d_bigSoftie(packet):
+  logging.info("Attempting softie switch")
+  pB_display.setQue(['<3 Laura <3', '<3 <3 <3 <3'])
+  pB_display.immediateText('<3 Laura <3')
+  pB_audio.playSong("Barry White/Barry White - John Cage Theme - Ally McBeal.mp3")
+  pB_audio.seek(50)
 
 def d_subWUp(packet):
   if SUB_OUT:
@@ -293,7 +293,9 @@ def speedTrigger(speed):
   global SESSION_DATA
   if (speed > 100) and SESSION_DATA['SPEED_SWITCH']:
     try:
-        pB_display.immediateText('WINDOWS!')
+        pB_display.immediateText('SCARAMOUSH!')
+        pb_audio.playSong("bohemian.mp3")
+        pb_audio.seek(248)
         WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
         WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
