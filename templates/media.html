@@ -1,159 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <head>
-    <title>pyBus Web</title>
-    <script type="text/javascript" src="static/js/jquery.js"></script>
-    <script type="text/javascript" src="static/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="static/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="static/js/media_control.js" ></script>
-    <script type="text/javascript" src="static/js/paging.js" ></script>
-    <link href="static/css/bootstrap.min_slate.css" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="static/css/bootstrap-responsive.min.css" rel="stylesheet">
-    <link href="static/css/DT_bootstrap.css" rel="stylesheet">
-
-    <style type="text/css">
-      body {
-        padding-top: 15px;
-      }
-    </style>
-  </head>
+  {% include 'header.html' %}
 
   <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="brand" href="#">PyBus</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li><a href="/">DashBoard</a></li>
-              <li class="active"><a href="#">Media</a></li>
-              <li><a href="/admin">Admin</a></li>
-              <li><a href="/system">System</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-
-    <br><br>
+    {% include 'navbar.html' %}
 
     <div class="container">
-      <div class="row-fluid">
-        <div class="span12"> 
-          <div class="accordion-inner">
-            <div class="row-fluid">
-              <div class="span12" id="mediaLibrary">
-                <h4>Media Library</h4>
+      <div class="row">
+        <div class="col-md-12" id="mediaLibrary">
 
-                <ul class="nav nav-tabs">
-                  <li class="active"><a href="#tab_playlist" data-toggle="tab">Playlist</a></li>
-                  <li><a href="#tab_library" data-toggle="tab">Library</a></li>
-                </ul>
+          <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="playList">
+            {% raw tableContent %}
+          </table>
 
-                <div id="myTabContent" class="tab-content">
-                  <div class="tab-pane fade active in" id="tab_playlist" style="overflow-y: hidden;">
-                    <div id="play_loading" style="text-align:center;">
-                      <img src="static/img/loading.gif" />
-                    </div>
-
-                    <table cellpadding="0" cellspacing="0" border="0" style="display: none" class="table table-striped table-bordered" id="playList">
-                      <thead>
-                        <tr>
-                          <th>Artist</th>
-                          <th>Album</th>
-                          <th>Genre</th>
-                          <th>Song</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="tab-pane fade" id="tab_library" style="overflow-y: hidden;">
-                    <div id="media_loading" style="text-align:center;">
-                      <img src="static/img/loading.gif" />
-                    </div>
-
-                    <table cellpadding="0" cellspacing="0" border="0" style="display: none" class="table table-striped table-bordered" id="mediaList">
-                      <thead>
-                        <tr>
-                          <th>Artist</th>
-                          <th>Album</th>
-                          <th>Genre</th>
-                          <th>Song</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-
-                
-                
-              </div>
-            </div>
-            
-            <hr>
-            
-            <div class="row-fluid">
-              <div class="span6">
-                <div class="well">
-                  <div id="currentPlaying">
-                    <h4>Loading..</h4>
-                  </div>
-                  <div class="progress active">
-                    <div class="bar" id="progressbar_track"></div>
-                  </div>
-                </div>
-              </div>
-              <div class="span6" id="currentPlaylist">
-                <div class="well">
-                  <h4>Controls</h4>
-                  <div style="text-align:center;">
-                    <button mediaAction="previous" class="btn btn-info"><i class="icon-backward icon-white"></i></button>
-                    <button mediaAction="pause" class="btn btn-info"><i class="icon-pause icon-white"></i><i class="icon-play icon-white"></i></button>
-                    <button mediaAction="next" class="btn btn-info"><i class="icon-forward icon-white"></i></button>
-                  </div>
-                </div>
-                <div class="well">
-                  <h4>Car Info</h4>
-                  <div id="carStatus">
-                    <table class="table table-condensed">
-                      <tr>
-                        <td style="width:50px;"><strong>RPM:</strong></td>
-                        <td><div class="progress active" style="width:100%;">
-                          <div class="bar" id="progressbar_revs"></div>
-                        </div></td>
-                        <td style="width:90px;" name="revsval"></td>
-                      </tr>
-                      <tr>
-                        <td style="width:50px;"><strong>Speed:</strong></td>
-                        <td><div class="progress active" style="width:100%;">
-                          <div class="bar" id="progressbar_speed"></div>
-                        </div></td>
-                        <td style="width:90px;" name="speedval"></td>
-                      </tr>
-                      </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-              
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -11,11 +11,6 @@ import gzip
 import pyBus_core as core
 
 #####################################
-# GLOBALS
-#####################################
-AUTO_RESTART = False
-
-#####################################
 # FUNCTIONS
 #####################################
 # Manage Ctrl+C gracefully
@@ -48,15 +43,6 @@ def createParser():
   parser.add_argument('--device', action='store', help='Path to iBus USB interface (Bought from reslers.de)')
   return parser
 
-def restart():
-  args = sys.argv[:]
-  logging.info('Re-spawning %s' % ' '.join(args))
-
-  args.insert(0, sys.executable)
-
-  os.chdir(_startup_cwd)
-  os.execv(sys.executable, args)
-
 #####################################
 # MAIN
 #####################################
@@ -68,9 +54,8 @@ _startup_cwd = os.getcwd()
 signal.signal(signal.SIGINT, signal_handler_quit) # Manage Ctrl+C
 configureLogging(loglevel)
 
-devPath = sys.argv[1]
-core.DEVPATH = devPath if devPath else "/dev/ttyUSB0"
-
+devPath = sys.argv[1] if len(sys.argv) else "/dev/ttyUSB0"
+core.DEVPATH = devPath
 
 try:
   core.initialize()
@@ -78,11 +63,6 @@ try:
 except Exception:
   logging.error("Caught unexpected exception:")
   logging.error(traceback.format_exc())
-  logging.info("Going to sleep 2 seconds and restart")
-  time.sleep(2)
-  if AUTO_RESTART:
-    restart()
-  else:
-    logging.critical("Dying")
-    
+
+logging.critical("And I'm dead.")    
 sys.exit(0)

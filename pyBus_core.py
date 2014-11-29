@@ -1,6 +1,13 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, binascii, termcolor, json, logging, subprocess
+import os
+import sys
+import time
+import json
+import signal
+import logging
+import binascii
+import subprocess
 from time import strftime as date
 
 sys.path.append( './lib/' )
