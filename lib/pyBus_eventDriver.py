@@ -292,6 +292,7 @@ def speedTrigger(speed):
       WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
     except:
       logging.warning("Exception in speed trigger")
+      logging.error(traceback.format_exc())
       
 ################## DIRECTIVE UTILITY FUNCTIONS ##################
 # Write current track to display 
