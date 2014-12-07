@@ -69,7 +69,9 @@ class playlistMod(BaseHandler):
             try:
                 pB_audio.playSong(filePath)
             except Exception, e:
-                pB_audio.init()
+                logging.error("Exception raised from playListModify")
+                logging.error(traceback.format_exc())
+                
 
 #################################
 # MAIN SERVER SETUP
