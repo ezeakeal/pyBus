@@ -114,7 +114,12 @@ def manage(packet):
     methodToCall = globals().get(methodName, None)
     if methodToCall:
       logging.debug("Directive found for packet - %s" % methodName)
-      result = methodToCall(packet)
+      try:
+        result = methodToCall(packet)
+      except:
+        logging.error("Exception raised from [%s]" % methodName)
+        logging.error(traceback.format_exc())
+    
     else:
       logging.debug("Method (%s) does not exist" % methodName)
   else:
@@ -280,19 +285,15 @@ def speedTrigger(speed):
     "bohemian.mp3" : 248
   }
   if (speed > 100) and SESSION_DATA['SPEED_SWITCH']:
-    try:
-      songNames = speedSongData.keys()
-      songIndex = random.randint(0, len(songNames)-1)
-      songName = songNames[songIndex]
-      pb_audio.playSong(songName)
-      pb_audio.seek(speedSongData[songName])
-      WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
-      WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
-      WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
-      WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
-    except:
-      logging.warning("Exception in speed trigger")
-      logging.error(traceback.format_exc())
+    songNames = speedSongData.keys()
+    songIndex = random.randint(0, len(songNames)-1)
+    songName = songNames[songIndex]
+    pB_audio.playSong(songName)
+    pB_audio.seek(speedSongData[songName])
+    WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
+    WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
+    WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
+    WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
       
 ################## DIRECTIVE UTILITY FUNCTIONS ##################
 # Write current track to display 
