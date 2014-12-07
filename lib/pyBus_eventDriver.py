@@ -43,13 +43,13 @@ DIRECTIVES = {
       '380000' : 'd_cdSendStatus',
       '380100' : 'd_cdStopPlaying',
       '380300' : 'd_cdStartPlaying',
-      '380A00' : 'songNamesd_cdNext',
+      '380A00' : 'd_cdNext',
       '380A01' : 'd_cdPrev',
       '380700' : '',
       '380701' : '',
       '380601' : 'd_toggleSS', # 1 pressed
       '380602' : 'd_togglePause', # 2 pressed
-      '380603' : '', # 3 pressed
+      '380603' : 'd_testSpeed', # 3 pressed
       '380604' : '', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
@@ -268,6 +268,9 @@ def d_cdRandom(packet):
   else:
     pB_display.immediateText('Random: OFF')
   _displayTrackInfo(False)
+
+def d_testSpeed(packet):
+  speedTrigger(110)
 
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
