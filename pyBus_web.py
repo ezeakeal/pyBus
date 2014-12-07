@@ -29,7 +29,6 @@ LOGLEVEL = logging.DEBUG
 MEDIA_CACHE = "/tmp/mediacachetable.html"
 
 def cacheMediaTable():
-    pB_audio.init()
     mediaData=pB_audio.getLibrary()
     loader = template.Loader("templates")
     t = loader.load("mediaTable.html")
@@ -108,10 +107,11 @@ def runServer(port):
 	    datefmt='%Y/%m/%dT%I:%M:%S'
 	)
 
+    pB_audio.init()
     cacheMediaTable()
     logging.info("Cached media server list")
     application.listen(port)
-    logging.info("Overseer listening on port %s" % port)
+    logging.info("PyBus listening on port %s" % port)
     tornado.ioloop.IOLoop.instance().start()
 
 

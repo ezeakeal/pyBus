@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-import os, sys, time, signal, json, logging, traceback
-try:
-  import alsaaudio
-except:
-  logging.warning("Exception importing alsaaudio")
-
-import threading
+import os
+import sys
+import time
+import json
+import signal
+import random
+import logging
+import traceback
 
 import pyBus_module_display as pB_display # Only events can manipulate the display stack
 import pyBus_module_audio as pB_audio # Add the audio module as it will only be manipulated from here in pyBus
@@ -42,18 +43,18 @@ DIRECTIVES = {
       '380000' : 'd_cdSendStatus',
       '380100' : 'd_cdStopPlaying',
       '380300' : 'd_cdStartPlaying',
-      '380A00' : 'd_cdNext',
+      '380A00' : 'songNamesd_cdNext',
       '380A01' : 'd_cdPrev',
-      '380700' : 'd_cdScanForward',
-      '380701' : 'd_cdScanBackard',
+      '380700' : '',
+      '380701' : '',
       '380601' : 'd_toggleSS', # 1 pressed
       '380602' : 'd_togglePause', # 2 pressed
-      '380603' : 'd_bigSoftie', # 3 pressed
-      '380604' : 'd_subWUp', # 4 pressed
+      '380603' : '', # 3 pressed
+      '380604' : '', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
-      '380400' : 'd_cdScanBackward',
-      '380401' : 'd_cdScanForward',
+      '380400' : '', # prev Playlist function?
+      '380401' : '', # next Playlist function?
       '380800' : 'd_cdRandom',
       '380801' : 'd_cdRandom'
     }
@@ -68,8 +69,7 @@ DIRECTIVES = {
 
 WRITER = None
 SESSION_DATA = {}
-TICK = 0.01 # sleep interval in seconds used between iBUS reads
-SUB_OUT = None
+TICK = 0.02 # sleep interval in seconds used between iBUS reads
 AIRPLAY = False
 
 #####################################
@@ -77,14 +77,8 @@ AIRPLAY = False
 #####################################
 # Set the WRITER object (the iBus interface class) to an instance passed in from the CORE module
 def init(writer):
-  global WRITER, SESSION_DATA, SUB_OUT
+  global WRITER, SESSION_DATA
   WRITER = writer
-
-  try:
-    SUB_OUT = alsaaudio.Mixer("PCM") # I have output sent to two devices in MPD - HW index 0 is the default sound device, which is plugged in to my sub in the boot.
-  except Exception, e:
-    logging.warning("Exception opening Sub audio output")
-    print e
 
   pB_display.init(WRITER)
   pB_audio.init()
@@ -274,32 +268,25 @@ def d_cdRandom(packet):
   else:
     pB_display.immediateText('Random: OFF')
   _displayTrackInfo(False)
-   
-def d_bigSoftie(packet):
-  logging.info("Attempting softie switch")
-  pB_display.setQue(['<3 Laura <3', '<3 <3 <3 <3'])
-  pB_display.immediateText('<3 Laura <3')
-  pB_audio.playSong("Barry White/Barry White - John Cage Theme - Ally McBeal.mp3")
-  pB_audio.seek(50)
-
-def d_subWUp(packet):
-  if SUB_OUT:
-    setVol = min(SUB_OUT.getvolume()[0] + 10, 100) # 100 is upper limit, as that will be the lower in worst scenarios
-    SUB_OUT.setvolume(setVol)
-    pB_display.immediateText("Sub Up (%s)" % setVol)
 
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
   global SESSION_DATA
+  # This dictionary lists possible songs to play as well as times to skip to
+  speedSongData = {
+    "bohemian.mp3" : 248
+  }
   if (speed > 100) and SESSION_DATA['SPEED_SWITCH']:
     try:
-        pB_display.immediateText('SCARAMOUSH!')
-        pb_audio.playSong("bohemian.mp3")
-        pb_audio.seek(248)
-        WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
-        WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
-        WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
-        WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
+      songNames = speedSongData.keys()
+      songIndex = random.randint(0, len(songNames)-1)
+      songName = songNames[songIndex]
+      pb_audio.playSong(songName)
+      pb_audio.seek(speedSongData[songName])
+      WRITER.writeBusPacket('3F','00', ['0C', '52', '01'])
+      WRITER.writeBusPacket('3F','00', ['0C', '41', '01'])
+      WRITER.writeBusPacket('3F','00', ['0C', '54', '01'])
+      WRITER.writeBusPacket('3F','00', ['0C', '44', '01'])
     except:
       logging.warning("Exception in speed trigger")
       
