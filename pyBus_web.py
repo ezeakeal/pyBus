@@ -65,6 +65,7 @@ class commandPage(BaseHandler):
 class playlistMod(BaseHandler):
     def get(self, actionType, encFilePath):
         filePath = unescape(encFilePath)
+        logging.debug("Action (%s) File(%s)" % (actionType, filePath))
         if (actionType == "play"):
             try:
                 logging.debug("Playing: %s" % filePath)
@@ -82,7 +83,7 @@ static_path = os.path.join(os.path.dirname(__file__), "static")
 handlers = [
 	(r'/', mediaPage),
     (r'/media', mediaPage),
-	(r'/mediaCommand/(.+)/(.+)', playlistMod),
+	(r'/mediaCommand/(\w+)/(.+)', playlistMod),
 	(r'/commander', commandPage),
     (r'/static/(.*)', tornado.web.StaticFileHandler, {'path': static_path})
 ]
