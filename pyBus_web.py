@@ -67,6 +67,7 @@ class playlistMod(BaseHandler):
         filePath = unescape(encFilePath)
         if (actionType == "play"):
             try:
+                logging.debug("Playing: %s" % filePath)
                 pB_audio.playSong(filePath)
             except Exception, e:
                 logging.error("Exception raised from playListModify")
