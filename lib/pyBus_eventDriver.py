@@ -282,7 +282,9 @@ def speedTrigger(speed):
   global SESSION_DATA
   # This dictionary lists possible songs to play as well as times to skip to
   speedSongData = {
-    "bohemian.mp3" : 248
+    "The Prodigy/Invaders Must Die.mp3": 49,
+    "Edguy/Mandrake/05 - Wake Up The King.mp3": 93,
+    "Killswitch Engage - Holy Diver": 144
   }
   if (speed > 100) and SESSION_DATA['SPEED_SWITCH']:
     songNames = speedSongData.keys()

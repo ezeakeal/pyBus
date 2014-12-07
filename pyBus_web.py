@@ -13,10 +13,10 @@ import tornado.auth
 import tornado.ioloop
 import tornado.options
 
-
 sys.path.append( './lib/' )
 
 from tornado import template
+from tornado.escape import url_unescape as unescape
 
 # import pyBus_module_web as pB_web
 import pyBus_module_audio as pB_audio
@@ -63,7 +63,8 @@ class commandPage(BaseHandler):
 
 
 class playlistMod(BaseHandler):
-    def get(self, actionType, filePath):
+    def get(self, actionType, encFilePath):
+        filePath = unescape(encFilePath)
         if (actionType == "play"):
             try:
                 pB_audio.playSong(filePath)
