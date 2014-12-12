@@ -50,7 +50,7 @@ DIRECTIVES = {
       '380601' : 'd_toggleSS', # 1 pressed
       '380602' : 'd_togglePause', # 2 pressed
       '380603' : 'd_testSpeed', # 3 pressed
-      '380604' : '', # 4 pressed
+      '380604' : 'd_standup', # 4 pressed
       '380605' : 'd_update', # 5 pressed
       '380606' : 'd_RESET', # 6 pressed
       '380400' : '', # prev Playlist function?
@@ -276,6 +276,10 @@ def d_cdRandom(packet):
 
 def d_testSpeed(packet):
   speedTrigger(110)
+
+def d_standup(packet):
+  pB_display.immediateText('Comedy')
+  pB_audio.playSong("Standup/first.mp3")
 
 # Do whatever you like here regarding the speed!
 def speedTrigger(speed):
