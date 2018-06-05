@@ -277,6 +277,7 @@ def d_cdPollResponse(packet):
   pB_ticker.disableFunc("announce") # stop announcing
   pB_ticker.disableFunc("pollResponse")
   pB_ticker.enableFunc("pollResponse", 30)
+  WRITER.writeBusPacket('68', 'c0', ['21', '40', '00', '09', '05', '05', '4D', '50', '53'])
   
 # Enable/Disable Random
 def d_cdRandom(packet):
