@@ -173,7 +173,7 @@ def d_toggleSS(packet):
     WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('SpeedSw: On')
   else: 
-  	WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('SpeedSw: Off')
 
 def d_togglePause(packet):
