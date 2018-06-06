@@ -2,12 +2,14 @@ pyBus
 =====
 
 iBus interface for my E46 BMW written in Python
-This is to be used with the USB interface which can be acquired from [Reslers.de](http://www.reslers.de/IBUS/)
+This is to be used with the USB interface which 
+can be acquired from [Reslers.de](http://www.reslers.de/IBUS/)
 
-The software expects MPD to be working on whatever it is installed on (for me, hopefully a raspberry Pi - will write something in a blog soon)
+The software acts as a media center in a BMW. It will use
+MPD as it's media manager, and provide an interface between 
+that and the radio/steering wheel controls.
 
 ## Overview
-There are 2 main components:  
 **pyBus.py** - interfaces with the iBus to emulate a CD-Changer  
 **pyBus_web.py** - Web-Server which will broadcast an interface that allows a user to:  
 * Play/Pause

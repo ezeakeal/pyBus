@@ -1,0 +1,26 @@
+{
+  // XX YY DATA (XX=Source YY=Destination DATA=Other hex stuff..)
+  // NOTE NOTE NOTE!!!! DONT PUT IN THE LENGTH HEX CODE. BETWEEN SRC AND DEST.
+  // XX YY DATA: 'func_name' (func_name is the funcion to be called if the hex is matched)
+  "44 BF 7401FF": "d_keyOut",
+  "80 BF *": "d_custom_IKE", // Use * for any match
+  "68 18 01": "d_cdPollResponse",
+  "68 18 380000": "d_cdSendStatus",
+  "68 18 380100": "d_cdStopPlaying",
+  "68 18 380300": "d_cdStartPlaying",
+  "68 18 380A00": "d_cdNext",
+  "68 18 380A01": "d_cdPrev",
+  "68 18 380700": "",
+  "68 18 380701": "",
+  "68 18 380601": "d_toggleSS", // 1 pressed
+  "68 18 380602": "d_togglePause", // 2 pressed
+  "68 18 380603": "d_testSpeed", // 3 pressed
+  "68 18 380604": "d_standup", // 4 pressed
+  "68 18 380605": "d_update", // 5 pressed
+  "68 18 380606": "d_RESET", // 6 pressed
+  "68 18 380400": "", // prev Playlist function?
+  "68 18 380401": "", // next Playlist function?
+  "68 18 380800": "d_cdRandom",
+  "68 18 380801": "d_cdRandom",
+  "50 C8 013B40": "d_RESET"
+}
