@@ -88,7 +88,8 @@ def init(writer):
 
   SESSION_DATA["DOOR_LOCKED"] = False
   SESSION_DATA["SPEED_SWITCH"] = False
-
+  
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.immediateText('PyBus Up')
   WRITER.writeBusPacket('3F', '00', ['0C', '4E', '01']) # Turn on the 'clown nose' for 3 seconds
   
@@ -169,8 +170,10 @@ def d_toggleSS(packet):
   global SESSION_DATA
   SESSION_DATA['SPEED_SWITCH'] = not SESSION_DATA['SPEED_SWITCH']
   if SESSION_DATA['SPEED_SWITCH']:
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('SpeedSw: On')
   else: 
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('SpeedSw: Off')
 
 def d_togglePause(packet):
@@ -179,22 +182,26 @@ def d_togglePause(packet):
   status = pB_audio.getInfo()
   if (status['status']['state'] != "play"):
     AIRPLAY = False
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('Play')
     pB_audio.play()
   else:
     AIRPLAY = True
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('Paused')
     pB_audio.pause()
   
 def d_update(packet):
   # TODO Implement a status updater using the tickUtil
   logging.info("UPDATE")
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.immediateText('UPDATING')
   pB_audio.update()
   pB_audio.addAll()
   
 def d_RESET(packet):
   logging.info("RESET")
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.immediateText('RESET')
   raise TriggerRestart("Restart Triggered")
 
@@ -212,12 +219,14 @@ def d_cdNext(packet):
   if not AIRPLAY:
     pB_audio.next()
     writeCurrentTrack()
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     _displayTrackInfo()
 
 def d_cdPrev(packet):
   if not AIRPLAY:
     pB_audio.previous()
     writeCurrentTrack()
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     _displayTrackInfo()
 
 # The following packets are received for start/end scanning
@@ -227,12 +236,14 @@ def d_cdScanForward(packet):
   if not AIRPLAY:
     cdSongHundreds, cdSong = _getTrackNumber()
     if "".join(packet['dat']) == "380401":
+      WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
       WRITER.writeBusPacket('18', '68', ['39', '03', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast forward scan signal
       pB_ticker.enableFunc("scanForward", 0.2)
 
 def d_cdScanBackward(packet):
   if not AIRPLAY:
     cdSongHundreds, cdSong = _getTrackNumber()
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     WRITER.writeBusPacket('18', '68', ['39', '04', '09', '00', '3F', '00', cdSongHundreds, cdSong]) # Fast backward scan signal
     if "".join(packet['dat']) == "380400":
       pB_ticker.enableFunc("scanBackward", 0.2)
@@ -242,12 +253,14 @@ def d_cdStopPlaying(packet):
   pB_audio.pause()
   pB_display.setDisplay(False)
   cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   WRITER.writeBusPacket('18', '68', ['39', '00', '02', '00', '3F', '00', cdSongHundreds, cdSong])
   
 # Start playing, turn on display writing
 def d_cdStartPlaying(packet):
   pB_audio.pause()
   pB_audio.play()
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.setDisplay(True)
   pB_ticker.disableAllFunc()
   writeCurrentTrack()
@@ -255,6 +268,7 @@ def d_cdStartPlaying(packet):
 
 # Unsure..  
 def d_cdSendStatus(packet):
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   writeCurrentTrack()
   _displayTrackInfo
 
@@ -263,14 +277,17 @@ def d_cdPollResponse(packet):
   pB_ticker.disableFunc("announce") # stop announcing
   pB_ticker.disableFunc("pollResponse")
   pB_ticker.enableFunc("pollResponse", 30)
+  WRITER.writeBusPacket('68', 'c0', ['21', '40', '00', '09', '05', '05', '4D', '50', '53'])
   
 # Enable/Disable Random
 def d_cdRandom(packet):
   packet_data = packet['dat']
   random = pB_audio.random(0, True)
   if random:
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('Random: ON')
   else:
+    WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
     pB_display.immediateText('Random: OFF')
   _displayTrackInfo(False)
 
@@ -278,6 +295,7 @@ def d_testSpeed(packet):
   speedTrigger(110)
 
 def d_standup(packet):
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.immediateText('Comedy')
   pB_audio.playSong("Standup/first.mp3")
 
@@ -305,6 +323,7 @@ def speedTrigger(speed):
 # Write current track to display 
 def writeCurrentTrack():
   cdSongHundreds, cdSong = _getTrackNumber()
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   WRITER.writeBusPacket('18', '68', ['39', '02', '09', '00', '3F', '00', cdSongHundreds, cdSong])
 
 # Sets the text stack to something..
@@ -314,6 +333,7 @@ def _displayTrackInfo(text=True):
   if text:
     textQue = _getTrackTextQue()
   infoQue = _getTrackInfoQue()
+  WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
   pB_display.setQue(textQue + infoQue)
 
 # Get some info text to display
