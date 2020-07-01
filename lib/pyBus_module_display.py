@@ -51,6 +51,9 @@ def _scrollDisplay():
     else:
       return False
 
+def cleardisplay():
+	WRITER.writeBusPacket('c8', '80', ['23', '42', '32', '1e']) #clear IKEConsole LCD of messages before filling it with MPD info 
+	
 def insertStringToQue(string, pos=0):
   global DISPLAY_QUE
   DISPLAY_QUE.insert(pos, string)
